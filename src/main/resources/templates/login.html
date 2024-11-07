@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<h2>Login</h2>
+<form th:action="@{/login}" method="post">
+    <div>
+        <label>Email:</label>
+        <input type="email" name="username" required />  <!-- 'username' is expected by Spring Security -->
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" name="password" required />
+    </div>
+    <button type="submit">Login</button>
+</form>
+<div th:if="${param.error}" style="color: red;">Invalid email or password</div>
+<div th:if="${param.logout}" style="color: green;">You have been logged out successfully</div>
+</body>
+</html>
