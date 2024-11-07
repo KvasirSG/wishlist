@@ -39,8 +39,20 @@ public class AppUser {
         return password;
     }
 
+    public void setEmail(@NotBlank @Email String email) {
+        this.email = email;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setUsername(@NotBlank String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
 
