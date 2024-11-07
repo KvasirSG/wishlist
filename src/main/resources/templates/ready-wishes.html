@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ready Wishes</title>
+</head>
+<body>
+<h1>Ready Wishes</h1>
+
+<div th:if="${#lists.isEmpty(readyWishes)}">
+    <p>No ready wishes to add.</p>
+</div>
+
+<table th:unless="${#lists.isEmpty(readyWishes)}">
+    <tr>
+        <th>Wish Name</th>
+        <th>Description</th>
+    </tr>
+    <tr th:each="wish : ${readyWishes}">
+        <td th:text="${wish.name}">Wish Name</td>
+        <td th:text="${wish.description}">Description</td>
+    </tr>
+</table>
+
+<form th:action="@{/wishes/addAll}" method="post" th:if="${!#lists.isEmpty(readyWishes)}">
+    <button type="submit">Add All Wishes to List</button>
+</form>
+
+<a href="/wishes/add">Add More Wishes</a>
+</body>
+</html>
