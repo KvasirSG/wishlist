@@ -1,0 +1,57 @@
+/* Dark Mode Container and Background */
+body {
+    background-color: #1a202c; /* Dark gray background */
+    color: #e2e8f0;            /* Light text color */
+}
+
+.container {
+    background-color: #2d3748; /* Darker container */
+    color: #e2e8f0;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Input Fields and Buttons */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #4a5568;  /* Dark border */
+    background-color: #2d3748;  /* Dark input background */
+    color: #e2e8f0;             /* Light text color */
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 600;
+    color: #1a202c;             /* Dark button text */
+    background-color: #63b3ed;  /* Light blue button */
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4299e1;  /* Slightly darker blue */
+}
+
+/* Form Headings and Text Colors */
+h2 {
+    color: #63b3ed;  /* Light blue for headings */
+}
+
+.text-red-500 {
+    color: #fc8181; /* Light red for error messages */
+}
+
+.text-green-500 {
+    color: #68d391; /* Light green for success messages */
+}
