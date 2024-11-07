@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Saved Wishes</title>
+</head>
+<body>
+<h1>Saved Wishes</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:each="wish : ${wishes}">
+    <td th:text="${wish.name}">Wish Name</td>
+    <td th:text="${wish.description}">Wish Description</td>
+    <td>
+      <a th:href="@{/wishes/{id}/edit(id=${wish.id})}">Edit</a>
+      <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post" style="display:inline;">
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+</table>
+
+<a href="/wishes/add">Add New Wishes</a>
+</body>
+</html>
