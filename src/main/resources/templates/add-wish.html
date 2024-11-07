@@ -2,22 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Add Wish</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
-<h1>Add Wish to Ready List</h1>
+<body class="bg-gray-100">
+<div class="container shadow bg-gray-800 text-white rounded mt-4 p-4">
+    <h2 class="text-center text-lg text-blue-500 mb-4">Add Wish to Ready List</h2>
 
-<form th:action="@{/wishes/ready}" th:object="${wish}" method="post">
-    <div>
-        <label>Wish Name:</label>
-        <input type="text" th:field="*{name}" placeholder="Enter wish name" required />
-    </div>
-    <div>
-        <label>Description:</label>
-        <input type="text" th:field="*{description}" placeholder="Enter wish description" />
-    </div>
-    <button type="submit">Add Wish to Ready List</button>
-</form>
+    <form th:action="@{/wishes/ready}" th:object="${wish}" method="post">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300 mb-1">Wish Name:</label>
+            <input type="text" th:field="*{name}" placeholder="Enter wish name" required
+                   class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" />
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300 mb-1">Description:</label>
+            <input type="text" th:field="*{description}" placeholder="Enter wish description"
+                   class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" />
+        </div>
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600">
+            Add Wish to Ready List
+        </button>
+    </form>
 
-<a href="/wishes/ready">View Ready Wishes</a>
+    <a href="/wishes/ready" class="block mt-4 text-blue-400 hover:text-blue-500">View Ready Wishes</a>
+</div>
 </body>
 </html>

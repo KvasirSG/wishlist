@@ -55,3 +55,31 @@ h2 {
 .text-green-500 {
     color: #68d391; /* Light green for success messages */
 }
+
+.bg-gray-800 {
+    background-color: #2d3748;
+}
+
+.text-gray-300 {
+    color: #d1d5db;
+}
+
+.bg-gray-700 {
+    background-color: #4a5568;
+}
+
+.border-gray-600 {
+    border-color: #718096;
+}
+
+.text-blue-400 {
+    color: #63b3ed;
+}
+
+.text-blue-500 {
+    color: #4299e1;
+}
+
+.hover\:bg-blue-600:hover {
+    background-color: #2b6cb0;
+}
