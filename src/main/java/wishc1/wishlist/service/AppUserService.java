@@ -1,8 +1,8 @@
 package wishc1.wishlist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import wishc1.wishlist.model.AppUser;
 import wishc1.wishlist.repository.AppUserRepository;
 
@@ -21,12 +21,13 @@ public class AppUserService {
     }
 
     public Optional<AppUser> findByEmail(String email) {
-        return appUserRepository.findByEmail(email);
+        return appUserRepository.findByEmail(email);  // Call repository method
     }
 
     public AppUser saveUser(AppUser appUser) {
-        appUser.setPassword(passwordEncoder.encode(appUser.getPassword())); // Encode password before saving
+        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
         return appUserRepository.save(appUser);
     }
 }
+
 
