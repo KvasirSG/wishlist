@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import wishc1.wishlist.service.CustomUserDetailsService;
+import wishc1.wishlist.security.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -28,12 +28,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Disable CSRF for development, enable for production
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers("/css/**","/register", "/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard")
+                        .defaultSuccessUrl("/profile") //TODO: Fix this to be the actual place we want to navigate users to after login. Currently for debug/testing
                         .permitAll()
                 )
                 .logout(logout -> logout

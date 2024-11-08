@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wishc1.wishlist.model.AppUser;
+import wishc1.wishlist.security.CustomUserDetailsService;
 
 import java.util.Optional;
 
