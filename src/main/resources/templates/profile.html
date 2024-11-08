@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+<h2>Welcome, <span th:text="${appUser.username}"></span>!</h2>
+<p>Your email: <span th:text="${appUser.email}"></span></p>
+</body>
+</html>
