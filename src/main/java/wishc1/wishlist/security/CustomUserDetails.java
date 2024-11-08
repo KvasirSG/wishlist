@@ -21,7 +21,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Return empty authorities if no roles are used; add roles if needed
         return Collections.emptyList();
     }
 
@@ -55,4 +54,3 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 }
-

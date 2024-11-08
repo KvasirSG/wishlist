@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Your Wishlists</title>
+</head>
+<body>
+<h1>Your Wishlists</h1>
+
+<div th:if="${wishLists.size() == 0}">
+  <p>You have no wishlists. Create your first wishlist below:</p>
+  <a href="/wishlists/create">Create New Wishlist</a>
+</div>
+
+<div th:if="${wishLists.size() > 0}">
+  <table>
+    <tr>
+      <th>Event Name</th>
+      <th>Event Date</th>
+      <th>Actions</th>
+    </tr>
+    <tr th:each="wishList : ${wishLists}">
+      <td th:text="${wishList.eventName}">Event Name</td>
+      <td th:text="${wishList.eventDate}">Event Date</td>
+      <td>
+        <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}">Add Wishes</a>
+        <!-- Additional actions can be added here, like editing or deleting the wishlist -->
+      </td>
+    </tr>
+  </table>
+  <a href="/wishlists/create">Create New Wishlist</a>
+</div>
+
+</body>
+</html>

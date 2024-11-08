@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Share Wishlist</title>
+</head>
+<body>
+<h1>Share Wishlist</h1>
+
+<p>Share the wishlist "<span th:text="${wishList.eventName}">Event Name</span>"</p>
+
+<form th:action="@{/wishlists/{id}/share(id=${wishList.id})}" method="post">
+  <div>
+    <label>User Email:</label>
+    <input type="email" name="email" placeholder="Enter user email" required />
+  </div>
+  <button type="submit">Share</button>
+</form>
+
+<a href="/wishlists">Back to Wishlists</a>
+</body>
+</html>

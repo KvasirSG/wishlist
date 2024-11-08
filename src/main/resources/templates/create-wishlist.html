@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Create Wishlist</title>
+</head>
+<body>
+<h1>Create a New Wishlist</h1>
+
+<form th:action="@{/wishlists/create}" th:object="${wishList}" method="post">
+  <div>
+    <label>Event Name:</label>
+    <input type="text" th:field="*{eventName}" placeholder="Enter event name" required />
+  </div>
+  <div>
+    <label>Event Date:</label>
+    <input type="date" th:field="*{eventDate}" required />
+  </div>
+  <button type="submit">Create Wishlist</button>
+</form>
+
+</body>
+</html>
