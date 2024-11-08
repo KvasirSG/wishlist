@@ -125,11 +125,16 @@ public class WishListController {
      * @return the user-wishlists page
      */
     @GetMapping
-    public String viewUserWishLists(Model model) {
-        AppUser currentUser = getCurrentUser();
-        List<WishList> wishLists = wishListService.getWishListsByOwner(currentUser);
-        model.addAttribute("wishLists", wishLists);
-        return "user-wishlists";
+    public String viewUserWishLists(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            AppUser currentUser = userDetails.getAppUser();
+            // Initialize wishlists to avoid LazyInitializationException
+            List<WishList> wishLists = wishListService.getWishListsByOwner(currentUser.getId());
+            model.addAttribute("wishLists", wishLists);
+            return "user-wishlists";
+        }
+        return "redirect:/login";
     }
 
     /**

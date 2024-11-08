@@ -1,5 +1,6 @@
 package wishc1.wishlist.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wishc1.wishlist.model.AppUser;
@@ -26,6 +27,7 @@ public class WishListService {
         return wishListRepository.save(wishList);
     }
 
+    @Transactional(readOnly = true)
     public Optional<WishList> getWishListById(Long id) {
         return wishListRepository.findById(id);
     }
@@ -52,4 +54,11 @@ public class WishListService {
     public List<WishList> getWishListsSharedWithUser(AppUser user) {
         return wishListRepository.findByViewersContaining(user);
     }
+
+    @Transactional(readOnly = true)
+    public List<WishList> getWishListsByOwner(Long ownerId) {
+        return wishListRepository.findAllByOwnerId(ownerId);
+    }
+
+
 }

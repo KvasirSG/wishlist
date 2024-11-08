@@ -20,8 +20,12 @@ public class WishList {
     @JoinColumn(name = "owner_id", nullable = false)
     private AppUser owner;
 
-    @OneToMany
-    @JoinColumn(name = "wishlist_id")
+    @ManyToMany
+    @JoinTable(
+            name = "wishlist_wishes",
+            joinColumns = @JoinColumn(name = "wishlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "wish_id")
+    )
     private List<Wish> wishes;
 
     @ManyToMany
@@ -87,20 +91,20 @@ public class WishList {
 
     // Getters and setters for all fields
 
-    public void addViewer(AppUser viewer) {
-        this.viewers.add(viewer);
-    }
-
-    public void removeViewer(AppUser viewer) {
-        this.viewers.remove(viewer);
-    }
-
     public Set<AppUser> getViewers() {
         return viewers;
     }
 
     public void setViewers(Set<AppUser> viewers) {
         this.viewers = viewers;
+    }
+
+    public void addViewer(AppUser viewer) {
+        this.viewers.add(viewer);
+    }
+
+    public void removeViewer(AppUser viewer) {
+        this.viewers.remove(viewer);
     }
 }
 

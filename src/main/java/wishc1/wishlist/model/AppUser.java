@@ -3,6 +3,8 @@ package wishc1.wishlist.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.List;
+
 @Entity
 public class AppUser {
 
@@ -22,6 +24,9 @@ public class AppUser {
     @NotBlank
     @Column(unique = true)
     private String username;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishList> wishlists;
 
     public AppUser() {}
 
@@ -53,6 +58,18 @@ public class AppUser {
 
     public String getUsername() {
         return username;
+    }
+
+    public List<WishList> getWishlists() {
+        return wishlists;
+    }
+
+    public void setWishlists(List<WishList> wishlists) {
+        this.wishlists = wishlists;
+    }
+
+    public long getId() {
+        return id;
     }
 }
 

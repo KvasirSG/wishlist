@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface WishListRepository extends JpaRepository<WishList, Long> {
     Optional<WishList> findByEventName(String eventName);
+    List<WishList> findAllByOwnerId(Long ownerId);
     List<WishList> findByViewersContaining(AppUser viewer);
 }

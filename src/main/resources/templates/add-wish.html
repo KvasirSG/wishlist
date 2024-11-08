@@ -4,9 +4,9 @@
     <title>Add Wish</title>
 </head>
 <body>
-<h1>Add Wish to Ready List</h1>
+<h1>Add Wish to Wishlist</h1>
 
-<form th:action="@{/wishes/ready}" th:object="${wish}" method="post">
+<form th:action="@{/wishlists/{id}/addWish(id=${wishList.id})}" th:object="${wish}" method="post">
     <div>
         <label>Wish Name:</label>
         <input type="text" th:field="*{name}" placeholder="Enter wish name" required />
@@ -15,9 +15,9 @@
         <label>Description:</label>
         <input type="text" th:field="*{description}" placeholder="Enter wish description" />
     </div>
-    <button type="submit">Add Wish to Ready List</button>
+    <button type="submit">Add Wish to Wishlist</button>
 </form>
 
-<a href="/wishes/ready">View Ready Wishes</a>
+<a th:href="@{/wishlists}">View Wishlists</a>
 </body>
 </html>

@@ -6,12 +6,7 @@
 <body>
 <h1>Your Wishlists</h1>
 
-<div th:if="${wishLists.size() == 0}">
-  <p>You have no wishlists. Create your first wishlist below:</p>
-  <a href="/wishlists/create">Create New Wishlist</a>
-</div>
-
-<div th:if="${wishLists.size() > 0}">
+<div th:if="${wishLists != null}">
   <table>
     <tr>
       <th>Event Name</th>
@@ -23,12 +18,13 @@
       <td th:text="${wishList.eventDate}">Event Date</td>
       <td>
         <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}">Add Wishes</a>
-        <!-- Additional actions can be added here, like editing or deleting the wishlist -->
       </td>
     </tr>
   </table>
-  <a href="/wishlists/create">Create New Wishlist</a>
 </div>
-
+<div th:unless="${wishLists != null}">
+  <p>You have no wishlists. Create your first wishlist below:</p>
+</div>
+<a href="/wishlists/create">Create New Wishlist</a>
 </body>
 </html>
