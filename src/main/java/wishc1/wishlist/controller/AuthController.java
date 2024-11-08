@@ -1,10 +1,12 @@
 package wishc1.wishlist.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,11 +40,10 @@ public class AuthController {
 
     // Process Registration
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("appUser") AppUser appUser, Model model, RedirectAttributes redirectAttributes) {
+    public String registerUser(@Valid @ModelAttribute("appUser") AppUser appUser, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         // Check if email is already registered
-        if (appUserService.findByEmail(appUser.getEmail()).isPresent()) {
-            model.addAttribute("error", "Email is already registered.");
-            return "register";
+        if (result.hasErrors()) {
+            return "register";  // Reload the form with error messages if validation fails
         }
 
         // Save the new user

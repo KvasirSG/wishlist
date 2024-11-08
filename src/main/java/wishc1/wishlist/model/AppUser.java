@@ -2,6 +2,7 @@ package wishc1.wishlist.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import wishc1.wishlist.model.validation.*;
 
 @Entity
 public class AppUser {
@@ -12,14 +13,17 @@ public class AppUser {
 
     @NotBlank
     @Email
+    @UniqueEmail
     @Column(unique = true)
     private String email;
 
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
     @NotBlank
+    @Size(min = 3, message = "Username must be at least 3 characters")
+    @UniqueUsername
     @Column(unique = true)
     private String username;
 
