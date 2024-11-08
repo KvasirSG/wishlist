@@ -1,10 +1,12 @@
 package wishc1.wishlist.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,22 +29,24 @@ public class AuthController {
     public String showRegistrationForm(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
-            // Redirect to profile if the user is already authenticated
+            // Redirect to dashboard if the user is already authenticated
             return "redirect:/profile";
         }
 
+        // Otherwise, show the registration page
         model.addAttribute("appUser", new AppUser());  // Empty form data object
         return "register";  // Returns the "register.html" Thymeleaf template
     }
 
     // Process Registration
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("appUser") AppUser appUser, Model model, RedirectAttributes redirectAttributes) {
-        if (appUserService.findByEmail(appUser.getEmail()).isPresent()) {
-            model.addAttribute("error", "Email is already registered.");
-            return "register";
+    public String registerUser(@Valid @ModelAttribute("appUser") AppUser appUser, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        // Check if email is already registered
+        if (result.hasErrors()) {
+            return "register";  // Reload the form with error messages if validation fails
         }
 
+        // Save the new user
         appUserService.saveUser(appUser);
         redirectAttributes.addFlashAttribute("success", "Registration successful! Please log in.");
         return "redirect:/login";
@@ -65,3 +69,5 @@ public class AuthController {
         return "profile";
     }
 }
+
+
