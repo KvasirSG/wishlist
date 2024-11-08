@@ -55,3 +55,9 @@ h2 {
 .text-green-500 {
     color: #68d391; /* Light green for success messages */
 }
+
+.error-message {
+    color: #e3342f; /* Red color */
+    font-size: 0.9em;
+    margin-top: 0.25rem;
+}

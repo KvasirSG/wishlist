@@ -7,23 +7,28 @@
 <body class="bg-gray-100">
 <div class="container shadow bg-white rounded mt-4 p-4">
     <h2 class="text-center text-lg text-blue-500 mb-4">Register</h2>
+
     <form th:action="@{/register}" th:object="${appUser}" method="post">
-        <div>
+        <div class="mb-3">
             <label>Email:</label>
-            <input type="email" th:field="*{email}" required />
+            <input type="email" th:field="*{email}" placeholder="Enter your email" required />
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></div>
         </div>
-        <div>
+
+        <div class="mb-3">
             <label>Password:</label>
-            <input type="password" th:field="*{password}" required />
+            <input type="password" th:field="*{password}" placeholder="Enter a password" required minlength="8" />
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>
         </div>
-        <div>
+
+        <div class="mb-3">
             <label>Username:</label>
-            <input type="text" th:field="*{username}" required />
+            <input type="text" th:field="*{username}" placeholder="Enter a username" required minlength="3" />
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>
         </div>
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Register</button>
-        <div th:if="${error}" th:text="${error}" class="text-red-500 mt-2"></div>
+
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600">Register</button>
     </form>
-    <div th:if="${success}" th:text="${success}" class="text-green-500 text-center mt-4"></div>
 </div>
 </body>
 </html>
