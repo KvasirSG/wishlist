@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import wishc1.wishlist.model.AppUser;
 import wishc1.wishlist.model.Wish;
 import wishc1.wishlist.model.WishList;
+import wishc1.wishlist.security.CustomUserDetails;
 import wishc1.wishlist.service.AppUserService;
 import wishc1.wishlist.service.WishListService;
 import wishc1.wishlist.service.WishService;
@@ -46,24 +47,32 @@ public class WishListController {
         return "create-wishlist";
     }
 
+
     /**
-     * Handle creation of a new wishlist and assign it to the specified owner.
+     * Handle creation of a new wishlist and automatically assign it to the authenticated user.
      *
      * @param wishList the wishlist to be created
-     * @param ownerEmail the email of the owner
+     * @param authentication the authentication object containing the current user's details
      * @param redirectAttributes the redirect attributes for success/error messages
      * @return redirect to the main wishlists page
      */
     @PostMapping("/create")
-    public String createWishList(@ModelAttribute WishList wishList, @RequestParam("ownerEmail") String ownerEmail, RedirectAttributes redirectAttributes) {
-        Optional<AppUser> owner = appUserService.findByEmail(ownerEmail);
-        if (owner.isPresent()) {
-            wishList.setOwner(owner.get());
-            wishListService.createWishList(wishList.getEventName(), wishList.getEventDate(), owner.get());
-            redirectAttributes.addFlashAttribute("success", "Wishlist created successfully.");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Owner not found.");
+    public String createWishList(@ModelAttribute WishList wishList,
+                                 Authentication authentication,
+                                 RedirectAttributes redirectAttributes) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            redirectAttributes.addFlashAttribute("error", "You must be logged in to create a wishlist.");
+            return "redirect:/login";
         }
+
+        // Retrieve the currently authenticated user's email from the Authentication object
+        AppUser appUser = ((CustomUserDetails) authentication.getPrincipal()).getAppUser();
+
+        // Set the authenticated user as the owner of the new wishlist
+        wishList.setOwner(appUser);
+        wishListService.createWishList(wishList.getEventName(), wishList.getEventDate(), appUser);
+
+        redirectAttributes.addFlashAttribute("success", "Wishlist created successfully.");
         return "redirect:/wishlists";
     }
 
