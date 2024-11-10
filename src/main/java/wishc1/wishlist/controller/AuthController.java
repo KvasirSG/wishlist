@@ -60,13 +60,8 @@ public class AuthController {
 
     // Profile Page
     @GetMapping("/profile")
-    public String userProfile(Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            AppUser appUser = userDetails.getAppUser();
-            model.addAttribute("appUser", appUser);
-        }
-        return "profile";
+    public String userProfile() {
+        return "redirect:/wishlists/profile";
     }
 }
 

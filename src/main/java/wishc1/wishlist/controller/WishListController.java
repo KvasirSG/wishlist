@@ -150,7 +150,7 @@ public class WishListController {
         AppUser currentUser = getCurrentUser();
         List<WishList> sharedWishLists = wishListService.getWishListsSharedWithUser(currentUser);
         model.addAttribute("sharedWishLists", sharedWishLists);
-        return "shared-wishlists";
+        return "share-wishlist";
     }
 
     /**
@@ -276,7 +276,7 @@ public class WishListController {
             model.addAttribute("wishLists", wishListService.getWishListsByOwner(appUser.getId()));  // Fetch user's wishlists
             model.addAttribute("users", appUserService.getAllUsers());  // Fetch all users for sharing
 
-            return "user-profile";
+            return "profile";
         }
         return "redirect:/login";
     }
