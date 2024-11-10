@@ -60,5 +60,8 @@ public class WishListService {
         return wishListRepository.findAllByOwnerId(ownerId);
     }
 
+    public List<WishList> getWishListsByIds(List<Long> ids) {
+        return wishListRepository.findAllById(ids);
+    }
 
 }

@@ -1,21 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Share Wishlist</title>
+  <title>Share Wishlists</title>
 </head>
 <body>
-<h1>Share Wishlist</h1>
+<h1>Share Your Wishlists</h1>
 
-<p>Share the wishlist "<span th:text="${wishList.eventName}">Event Name</span>"</p>
-
-<form th:action="@{/wishlists/{id}/share(id=${wishList.id})}" method="post">
-  <div>
-    <label>User Email:</label>
-    <input type="email" name="email" placeholder="Enter user email" required />
+<!-- Display Wishlists with Checkboxes for Selection -->
+<h2>Select Wishlists to Share</h2>
+<form th:action="@{/wishlists/shareMultiple}" method="post">
+  <div th:if="${wishLists != null}">
+    <ul>
+      <li th:each="wishList : ${wishLists}">
+        <input type="checkbox" name="wishListIds" th:value="${wishList.id}" />
+        <label th:text="${wishList.eventName}">Wishlist Name</label>
+      </li>
+    </ul>
   </div>
-  <button type="submit">Share</button>
+  <div th:unless="${wishLists != null}">
+    <p>You have no wishlists available to share.</p>
+  </div>
+
+  <!-- Display Recipients with Checkboxes -->
+  <h2>Select Recipients</h2>
+  <div th:if="${users != null}">
+    <ul>
+      <li th:each="user : ${users}">
+        <input type="checkbox" name="recipientUsername" th:value="${user.username}" />
+      </li>
+    </ul>
+  </div>
+  <div th:unless="${users != null}">
+    <p>No recipients available.</p>
+  </div>
+
+  <!-- Submit Button to Share Selected Wishlists with Selected Recipients -->
+  <button type="submit">Share Selected Wishlists</button>
 </form>
 
-<a href="/wishlists">Back to Wishlists</a>
+<a href="/wishlists">Back to Your Wishlists</a>
 </body>
 </html>

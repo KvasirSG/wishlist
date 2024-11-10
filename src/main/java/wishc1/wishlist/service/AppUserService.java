@@ -76,4 +76,7 @@ public class AppUserService {
 
         throw new RuntimeException("No authenticated user found.");
     }
+    public List<AppUser> getUsersByEmails(List<String> emails) {
+        return appUserRepository.findAllByEmailIn(emails);
+    }
 }

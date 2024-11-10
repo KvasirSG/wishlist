@@ -1,5 +1,6 @@
 package wishc1.wishlist.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import wishc1.wishlist.service.WishListService;
 import wishc1.wishlist.service.WishService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -158,17 +160,25 @@ public class WishListController {
      * @param model the model to hold the wishlist and list of users
      * @return the share-wishlist page, or redirect to main wishlists page if wishlist not found
      */
-    @GetMapping("/{id}/share")
-    public String showShareWishListForm(@PathVariable Long id, Model model) {
-        Optional<WishList> wishList = wishListService.getWishListById(id);
-        if (wishList.isPresent()) {
-            model.addAttribute("wishList", wishList.get());
-            model.addAttribute("users", appUserService.getAllUsers()); // Fetch all users to share with
-            return "share-wishlist";
-        }
-        return "redirect:/wishlists";
-    }
+    /**
+     * Display the form to share multiple wishlists with multiple recipients.
+     *
+     * @param model the model to hold the wishlists and user list
+     * @param authentication the authentication object to retrieve current user
+     * @return the share-wishlists page
+     */
+    @GetMapping("/share")
+    public String showShareWishListsForm(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            AppUser currentUser = userDetails.getAppUser();
 
+            model.addAttribute("wishLists", wishListService.getWishListsByOwner(currentUser.getId())); // Show user's wishlists
+            model.addAttribute("users", appUserService.getAllUsers());  // List all potential recipients
+            return "share-wishlists";
+        }
+        return "redirect:/login";
+    }
     /**
      * Share a wishlist with a user by their email.
      *
@@ -191,6 +201,36 @@ public class WishListController {
 
         return "redirect:/wishlists";
     }
+    /**
+     * Share selected wishlists with specified recipients by their emails.
+     *
+     * @param wishListIds the list of selected wishlist IDs to share
+     * @param recipientEmails the list of recipient emails to share with
+     * @param redirectAttributes the redirect attributes for success/error messages
+     * @return redirect to the wishlists page
+     */
+    @PostMapping("/shareMultiple")
+    public String shareMultipleWishLists(@RequestParam List<Long> wishListIds,
+                                         @RequestParam List<String> recipientEmails,
+                                         RedirectAttributes redirectAttributes) {
+        List<WishList> wishLists = wishListService.getWishListsByIds(wishListIds);
+        List<AppUser> recipients = appUserService.getUsersByEmails(recipientEmails);
+
+        if (wishLists.isEmpty() || recipients.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please select wishlists and recipients.");
+            return "redirect:/wishlists/share";
+        }
+
+        // Share each selected wishlist with each selected recipient
+        for (WishList wishList : wishLists) {
+            for (AppUser recipient : recipients) {
+                wishListService.shareWishListWithUser(wishList, recipient);
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Selected wishlists shared successfully with recipients.");
+        return "redirect:/wishlists";
+    }
 
     /**
      * Retrieve the currently logged-in user.
@@ -200,4 +240,45 @@ public class WishListController {
     private AppUser getCurrentUser() {
         return appUserService.getLoggedInUser();
     }
+    /**
+     * Show the form to start a new wishlist with dynamic "ready wishes" and available items.
+     */
+    @GetMapping("/new")
+    public String showNewWishListForm(HttpSession session, Model model) {
+        session.setAttribute("readyWishes", new ArrayList<Wish>());  // Initialize empty "ready wishes" list in session
+        model.addAttribute("wishList", new WishList());
+        model.addAttribute("availableWishes", wishService.getAllWishes());  // Fetch all available wishes
+        return "new-wishlist";  // New template for creating the wishlist dynamically
+    }
+
+    /**
+     * Add a selected wish from the available list to the "ready" list in the session.
+     */
+    @PostMapping("/addReadyWish")
+    public String addReadyWish(@RequestParam("wishId") Long wishId, HttpSession session) {
+        List<Wish> readyWishes = (List<Wish>) session.getAttribute("readyWishes");
+
+        // Fetch the selected wish by ID and add a duplicate to readyWishes
+        Wish selectedWish = wishService.getWishById(wishId).orElseThrow(() -> new IllegalArgumentException("Invalid wish ID"));
+        Wish duplicateWish = new Wish(selectedWish.getName(), selectedWish.getDescription(), selectedWish.getAddedDate());
+        readyWishes.add(duplicateWish);
+
+        session.setAttribute("readyWishes", readyWishes);  // Update the session attribute
+        return "redirect:/wishlists/new";  // Refresh the form to show updated wishes
+    }
+    @GetMapping("/profile")
+    public String userProfile(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            AppUser appUser = userDetails.getAppUser();
+
+            model.addAttribute("appUser", appUser);
+            model.addAttribute("wishLists", wishListService.getWishListsByOwner(appUser.getId()));  // Fetch user's wishlists
+            model.addAttribute("users", appUserService.getAllUsers());  // Fetch all users for sharing
+
+            return "user-profile";
+        }
+        return "redirect:/login";
+    }
+
 }

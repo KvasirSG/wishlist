@@ -6,5 +6,69 @@
 <body>
 <h2>Welcome, <span th:text="${appUser.username}"></span>!</h2>
 <p>Your email: <span th:text="${appUser.email}"></span></p>
+
+<!-- Button to Create a New Wishlist -->
+<a href="/wishlists/new">
+    <button>Create New Wishlist</button>
+</a>
+
+<!-- List of User's Existing Wishlists -->
+<h2>Your Wishlists</h2>
+<div th:if="${wishLists != null}">
+    <table>
+        <tr>
+            <th>Event Name</th>
+            <th>Event Date</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="wishList : ${wishLists}">
+            <td th:text="${wishList.eventName}">Event Name</td>
+            <td th:text="${wishList.eventDate}">Event Date</td>
+            <td>
+                <!-- Link to View/Add Wishes -->
+                <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}">Add Wishes</a> |
+                <!-- Link to Share Wishlist -->
+                <a th:href="@{/wishlists/{id}/share(id=${wishList.id})}">Share Wishlist</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:unless="${wishLists != null}">
+    <p>You have no wishlists. Create your first wishlist above.</p>
+</div>
+
+<!-- Sharing Section -->
+<h2>Share a Wishlist</h2>
+<form th:action="@{/wishlists/share}" method="post">
+    <div th:if="${wishLists != null}">
+        <label>Select a Wishlist to Share:</label>
+        <ul>
+            <li th:each="wishList : ${wishLists}">
+                <input type="radio" name="wishListId" th:value="${wishList.id}" required />
+                <label th:text="${wishList.eventName}">Wishlist Name</label>
+            </li>
+        </ul>
+    </div>
+    <div th:unless="${wishLists != null}">
+        <p>No wishlists available to share. Please create one first.</p>
+    </div>
+
+    <!-- Display Recipients as Checkboxes -->
+    <h2>Select Recipients</h2>
+    <div th:if="${users != null}">
+        <ul>
+            <li th:each="user : ${users}">
+                <input type="checkbox" name="recipientUsername" th:value="${user.username}" />
+            </li>
+        </ul>
+    </div>
+    <div th:unless="${users != null}">
+        <p>No recipients available.</p>
+    </div>
+
+    <!-- Submit to Share the Wishlist -->
+    <button type="submit">Share Wishlist</button>
+</form>
+
 </body>
 </html>
