@@ -12,6 +12,10 @@ public class AppUser {
 
     @NotBlank
     @Email
+    @Pattern(
+            regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+            message = "Please enter a valid email address"
+    ) // Enforces a stricter email pattern
     @Column(unique = true)
     private String email;
 
