@@ -79,25 +79,6 @@ public class WishListController {
     }
 
     /**
-     * Display form to add a wish to a specific wishlist.
-     *
-     * @param id the ID of the wishlist
-     * @param model the model to hold the wishlist and wishes
-     * @return the add-wish-to-wishlist page, or redirect to main wishlists page if wishlist not found
-     */
-    @GetMapping("/{id}/addWish")
-    public String showAddWishForm(@PathVariable Long id, Model model) {
-        Optional<WishList> wishList = wishListService.getWishListById(id);
-        if (wishList.isPresent()) {
-            model.addAttribute("wishList", wishList.get());
-            model.addAttribute("wishes", wishService.getAllWishes());
-            return "add-wish-to-wishlist";
-        } else {
-            return "redirect:/wishlists";
-        }
-    }
-
-    /**
      * Add a specific wish to a wishlist.
      *
      * @param id the ID of the wishlist
@@ -154,13 +135,6 @@ public class WishListController {
     }
 
     /**
-     * Display the form to share a wishlist with another user.
-     *
-     * @param id the ID of the wishlist to be shared
-     * @param model the model to hold the wishlist and list of users
-     * @return the share-wishlist page, or redirect to main wishlists page if wishlist not found
-     */
-    /**
      * Display the form to share multiple wishlists with multiple recipients.
      *
      * @param model the model to hold the wishlists and user list
@@ -175,32 +149,11 @@ public class WishListController {
 
             model.addAttribute("wishLists", wishListService.getWishListsByOwner(currentUser.getId())); // Show user's wishlists
             model.addAttribute("users", appUserService.getAllUsers());  // List all potential recipients
-            return "share-wishlists";
+            return "share-wishlist";
         }
         return "redirect:/login";
     }
-    /**
-     * Share a wishlist with a user by their email.
-     *
-     * @param id the ID of the wishlist to be shared
-     * @param email the email of the user to share the wishlist with
-     * @param redirectAttributes the redirect attributes for success/error messages
-     * @return redirect to the main wishlists page
-     */
-    @PostMapping("/{id}/share")
-    public String shareWishList(@PathVariable Long id, @RequestParam String email, RedirectAttributes redirectAttributes) {
-        Optional<WishList> wishList = wishListService.getWishListById(id);
-        Optional<AppUser> user = appUserService.findByEmail(email);
 
-        if (wishList.isPresent() && user.isPresent()) {
-            wishListService.shareWishListWithUser(wishList.get(), user.get());
-            redirectAttributes.addFlashAttribute("success", "Wishlist shared successfully.");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Wishlist or user not found.");
-        }
-
-        return "redirect:/wishlists";
-    }
     /**
      * Share selected wishlists with specified recipients by their emails.
      *
