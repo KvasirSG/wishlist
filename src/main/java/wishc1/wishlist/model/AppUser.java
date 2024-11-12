@@ -2,7 +2,6 @@ package wishc1.wishlist.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import wishc1.wishlist.model.validation.*;
 
 @Entity
 public class AppUser {
@@ -13,7 +12,10 @@ public class AppUser {
 
     @NotBlank
     @Email
-    @UniqueEmail
+    @Pattern(
+            regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+            message = "Please enter a valid email address"
+    ) // Enforces a stricter email pattern
     @Column(unique = true)
     private String email;
 
@@ -23,7 +25,6 @@ public class AppUser {
 
     @NotBlank
     @Size(min = 3, message = "Username must be at least 3 characters")
-    @UniqueUsername
     @Column(unique = true)
     private String username;
 
