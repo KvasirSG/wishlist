@@ -37,8 +37,7 @@ public class AppUserService {
         }
 
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
-        AppUser savedAppUser = appUserRepository.save(appUser);
-        return savedAppUser;
+        return appUserRepository.save(appUser);
     }
 }
 
