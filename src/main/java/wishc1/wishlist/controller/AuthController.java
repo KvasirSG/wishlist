@@ -42,9 +42,13 @@ public class AuthController {
         return "register";  // Returns the "register.html" Thymeleaf template
     }
 
-    // Process Registration
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("appUser") AppUser appUser, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        // Check for validation errors
+        if (result.hasErrors()) {
+            return "register";  // Reload the registration page with validation errors
+        }
+
         try {
             appUserService.saveUser(appUser);
             redirectAttributes.addFlashAttribute("success", "Registration successful! Please log in.");
@@ -58,6 +62,7 @@ public class AuthController {
             return "register";  // Reload the registration page with error message
         }
     }
+
 
     // Login Page
     @GetMapping("/login")
