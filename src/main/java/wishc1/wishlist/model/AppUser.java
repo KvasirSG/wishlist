@@ -10,21 +10,21 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "{appUser.email.notBlank}")
+    @Email(message = "{appUser.email.invalid}")
     @Pattern(
             regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            message = "Please enter a valid email address"
+            message = "{appUser.email.pattern}"
     ) // Enforces a stricter email pattern
     @Column(unique = true)
     private String email;
 
-    @NotBlank
-    @Size(min = 8, message = "Password must be at least 8 characters")
+    @NotBlank(message = "{appUser.password.notBlank}")
+    @Size(min = 8, message = "{appUser.password.size}")
     private String password;
 
-    @NotBlank
-    @Size(min = 3, message = "Username must be at least 3 characters")
+    @NotBlank(message = "{appUser.username.notBlank}")
+    @Size(min = 3, message = "{appUser.username.size}")
     @Column(unique = true)
     private String username;
 

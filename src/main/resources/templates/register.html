@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Register</title>
+    <meta charset="UTF-8">
+    <title th:text="#{register.title}">Register</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body class="bg-gray-100">
 <div class="container shadow bg-white rounded mt-4 p-4">
-    <h2 class="text-center text-lg text-blue-500 mb-4">Register</h2>
+    <h2 class="text-center text-lg text-blue-500 mb-4" th:text="#{register.header}">Register</h2>
 
     <form th:action="@{/register}" th:object="${appUser}" method="post">
         <div class="mb-3">
-            <label>Email:</label>
-            <input type="email" th:field="*{email}" placeholder="Enter your email" required />
+            <label th:text="#{register.email.label}">Email:</label>
+            <input type="email" th:field="*{email}" th:placeholder="#{register.email.placeholder}" required />
             <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></div>
         </div>
 
         <div class="mb-3">
-            <label>Password:</label>
-            <input type="password" th:field="*{password}" placeholder="Enter a password" required minlength="8" />
+            <label th:text="#{register.password.label}">Password:</label>
+            <input type="password" th:field="*{password}" th:placeholder="#{register.password.placeholder}" required minlength="8" />
             <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>
         </div>
 
         <div class="mb-3">
-            <label>Username:</label>
-            <input type="text" th:field="*{username}" placeholder="Enter a username" required minlength="3" />
+            <label th:text="#{register.username.label}">Username:</label>
+            <input type="text" th:field="*{username}" th:placeholder="#{register.username.placeholder}" required minlength="3" />
             <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></div>
         </div>
 
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600">Register</button>
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600" th:text="#{register.submit}">Register</button>
     </form>
 </div>
 </body>
