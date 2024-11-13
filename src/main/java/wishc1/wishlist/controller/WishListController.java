@@ -46,9 +46,8 @@ public class WishListController {
     @GetMapping("/create")
     public String showCreateWishListForm(Model model) {
         model.addAttribute("wishList", new WishList());
-        return "create-wishlist";
+        return "new-wishlist";
     }
-
 
     /**
      * Handle creation of a new wishlist and automatically assign it to the authenticated user.
