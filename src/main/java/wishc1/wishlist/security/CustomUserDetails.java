@@ -31,7 +31,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return appUser.getEmail();  // Assuming email is used for login
+        return appUser.getEmail();  // email is used for login (not to be confused with AppUser Username)
     }
 
     @Override

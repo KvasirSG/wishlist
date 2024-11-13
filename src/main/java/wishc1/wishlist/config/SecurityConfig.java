@@ -30,7 +30,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/profile") //TODO: Fix this to be the actual place we want to navigate users to after login. Currently for debug/testing
+                        .defaultSuccessUrl("/profile")
                         .permitAll()
                 )
                 .logout(logout -> logout
