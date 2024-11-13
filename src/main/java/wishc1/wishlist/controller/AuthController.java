@@ -16,16 +16,20 @@ import wishc1.wishlist.model.AppUser;
 import wishc1.wishlist.repository.AppUserRepository;
 import wishc1.wishlist.security.CustomUserDetails;
 import wishc1.wishlist.service.AppUserService;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 @Controller
 public class AuthController {
     private final AppUserService appUserService;
     private final AppUserRepository appUserRepository;
+    private final MessageSource messageSource;
 
     @Autowired
-    public AuthController(AppUserService appUserService, AppUserRepository appUserRepository) {
+    public AuthController(AppUserService appUserService, AppUserRepository appUserRepository, MessageSource messageSource) {
         this.appUserService = appUserService;
         this.appUserRepository = appUserRepository;
+        this.messageSource = messageSource;
     }
 
     // Registration Page
@@ -51,7 +55,9 @@ public class AuthController {
 
         try {
             appUserService.saveUser(appUser);
-            redirectAttributes.addFlashAttribute("success", "Registration successful! Please log in.");
+            // Retrieve the localized success message
+            String successMessage = messageSource.getMessage("registration.success", null, LocaleContextHolder.getLocale());
+            redirectAttributes.addFlashAttribute("success", successMessage);
             return "redirect:/login";
         } catch (UserAlreadyExistsException e) {
             if (e.getMessage().contains("Email")) {
