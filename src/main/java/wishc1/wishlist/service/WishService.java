@@ -28,6 +28,10 @@ public class WishService {
         return wishRepository.save(wish);
     }
 
+    public void saveWish(Wish wish) {
+        wishRepository.save(wish);
+    }
+
     public void addWishes(List<Wish> wishes) {
         for (Wish wish : wishes) {
             wish.setAddedDate(LocalDateTime.now());

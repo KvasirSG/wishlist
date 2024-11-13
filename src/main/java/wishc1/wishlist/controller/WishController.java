@@ -29,14 +29,37 @@ public class WishController {
         return new ArrayList<>();
     }
 
-    // Show form for adding a new wish to the "ready" list
+    /**
+     * Displays the form for adding a new wish to the repository (available items list).
+     */
+    @GetMapping("/add")
+    public String showNewWishForm(Model model) {
+        model.addAttribute("wish", new Wish());
+        return "add-wish"; // Renders the new-wish.html template
+    }
+
+    /**
+     * Processes the creation of a new wish and adds it to the available items list.
+     */
+    @PostMapping("/add")
+    public String addNewWish(@ModelAttribute("wish") Wish wish, RedirectAttributes redirectAttributes) {
+        wishService.saveWish(wish);
+        redirectAttributes.addFlashAttribute("success", "New wish added to available items.");
+        return "redirect:/wishes";
+    }
+
+    /**
+     * Show form for adding a wish to the "ready" list.
+     */
     @GetMapping("/wishes/add")
     public String showAddWishForm(Model model) {
         model.addAttribute("wish", new Wish());  // Make sure a new Wish object is added to the model
         return "add-wish";  // Renders the "add-wish.html" template
     }
 
-    // Process adding a single wish to the "ready" list (temporary storage)
+    /**
+     * Process adding a single wish to the "ready" list (temporary storage).
+     */
     @PostMapping("/wishes/ready")
     public String addWishToReadyList(@ModelAttribute("wish") Wish wish,
                                      @ModelAttribute("readyWishes") List<Wish> readyWishes,
@@ -46,23 +69,29 @@ public class WishController {
         return "redirect:/wishes/ready";  // Redirect to view "ready" wishes
     }
 
-    // Show the list of "ready" wishes with an option to add all of them to the database
+    /**
+     * Show the list of "ready" wishes with an option to add all of them to the database.
+     */
     @GetMapping("/wishes/ready")
     public String viewReadyWishes(@ModelAttribute("readyWishes") List<Wish> readyWishes, Model model) {
         model.addAttribute("readyWishes", readyWishes); // Pass the "ready" wishes list to the view
         return "ready-wishes";  // Returns the "ready-wishes.html" Thymeleaf template
     }
 
-    // Add all "ready" wishes to the database and clear the session list
+    /**
+     * Add all "ready" wishes to the database and clear the session list.
+     */
     @PostMapping("/wishes/addAll")
-    public String addAllWishesToList(@ModelAttribute("readyWishes") List<Wish> readyWishes, RedirectAttributes redirectAttributes) {
+    public String finalizeReadyWishes(@ModelAttribute("readyWishes") List<Wish> readyWishes, RedirectAttributes redirectAttributes) {
         wishService.addWishes(readyWishes); // Save all "ready" wishes to the database
         readyWishes.clear(); // Clear the "ready" list after saving
         redirectAttributes.addFlashAttribute("success", "All ready wishes have been saved.");
         return "redirect:/wishes";  // Redirect to the main list of saved wishes
     }
 
-    // Show a list of all saved wishes in the database
+    /**
+     * Show a list of all saved wishes in the database.
+     */
     @GetMapping("/wishes")
     public String listWishes(Model model) {
         List<Wish> wishes = wishService.getAllWishes(); // Get all saved wishes from the database
@@ -70,21 +99,19 @@ public class WishController {
         return "list-wishes";  // Returns the "list-wishes.html" Thymeleaf template
     }
 
-    // Controller method to display the edit form
-    @GetMapping("/wishes/{id}/edit")
-    public String showEditWishForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Wish> wish = wishService.getWishById(id);
-        if (wish.isPresent()) {
-            model.addAttribute("wish", wish.get()); // Pass the Wish object to the model
-            return "edit-wish";  // Returns the "edit-wish.html" Thymeleaf template
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Wish not found.");
-            return "redirect:/wishes";
-        }
+    /**
+     * Display the edit form for a specific wish.
+     */
+    @GetMapping("/wishes/edit")
+    public String showEditWishesPage(Model model) {
+        List<Wish> wishes = wishService.getAllWishes(); // Fetch all wishes
+        model.addAttribute("wishes", wishes); // Add to model for display
+        return "edit-wish"; // Returns the edit-wishes.html template
     }
 
-
-    // Process updating a specific wish and save the changes
+    /**
+     * Process updating a specific wish and save the changes.
+     */
     @PostMapping("/wishes/{id}/update")
     public String updateWish(@PathVariable Long id, @ModelAttribute("wish") Wish wishDetails, RedirectAttributes redirectAttributes) {
         wishService.updateWish(id, wishDetails); // Update the wish in the database
@@ -92,11 +119,25 @@ public class WishController {
         return "redirect:/wishes";  // Redirect to the main list of saved wishes
     }
 
-    // Process deletion of a specific wish
+    /**
+     * Process deletion of a specific wish.
+     */
     @PostMapping("/wishes/{id}/delete")
     public String deleteWish(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         wishService.deleteWish(id); // Delete the wish from the database
         redirectAttributes.addFlashAttribute("success", "Wish deleted successfully.");
+        return "redirect:/wishes";  // Redirect to the main list of saved wishes
+    }
+
+    /**
+     * Process deletion of selected wishes from a list.
+     */
+    @PostMapping("/wishes/deleteSelected")
+    public String deleteSelectedWishes(@RequestParam List<Long> selectedWishes, RedirectAttributes redirectAttributes) {
+        for (Long wishId : selectedWishes) {
+            wishService.deleteWish(wishId);
+        }
+        redirectAttributes.addFlashAttribute("success", "Selected wishes have been deleted.");
         return "redirect:/wishes";  // Redirect to the main list of saved wishes
     }
 }

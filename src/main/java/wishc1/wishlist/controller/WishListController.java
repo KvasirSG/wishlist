@@ -74,7 +74,7 @@ public class WishListController {
         wishListService.createWishList(wishList.getEventName(), wishList.getEventDate(), appUser);
 
         redirectAttributes.addFlashAttribute("success", "Wishlist created successfully.");
-        return "redirect:/wishlists";
+        return "redirect:/profile";
     }
 
     /**
@@ -114,7 +114,7 @@ public class WishListController {
             // Initialize wishlists to avoid LazyInitializationException
             List<WishList> wishLists = wishListService.getWishListsByOwner(currentUser.getId());
             model.addAttribute("wishLists", wishLists);
-            return "user-wishlists";
+            return "profile";
         }
         return "redirect:/login";
     }

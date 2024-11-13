@@ -1,23 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Edit Wish</title>
+    <title>Edit Wishes</title>
 </head>
 <body>
-<h1>Edit Wish</h1>
+<h1>Edit Wishes</h1>
 
-<form th:action="@{/wishes/{id}/update(id=${wish.id})}" th:object="${wish}" method="post">
-    <div>
-        <label>Wish Name:</label>
-        <input type="text" th:field="*{name}" required />
-    </div>
-    <div>
-        <label>Description:</label>
-        <input type="text" th:field="*{description}" />
-    </div>
-    <button type="submit">Save Changes</button>
+<!-- List of Wishes for Editing and Deletion -->
+<form th:action="@{/wishes/updateAll}" method="post">
+    <table>
+        <tr>
+            <th>Select</th>
+            <th>Wish Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="wish : ${wishes}">
+            <td><input type="checkbox" name="selectedWishes" th:value="${wish.id}" /></td>
+            <td><input type="text" th:field="*{wishes[__${wish.id}__].name}" th:value="${wish.name}" /></td>
+            <td><input type="text" th:field="*{wishes[__${wish.id}__].description}" th:value="${wish.description}" /></td>
+        </tr>
+    </table>
+    <button type="submit">Save Changes to Selected Wishes</button>
 </form>
 
-<a href="/wishes">Back to Wish List</a>
+<!-- Form to Delete Selected Wishes -->
+<form th:action="@{/wishes/deleteSelected}" method="post">
+    <button type="submit">Delete Selected Wishes</button>
+</form>
+
+<a href="/profile">Back to Your Profile page</a>
 </body>
 </html>

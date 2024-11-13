@@ -30,7 +30,7 @@
 
 <!-- Finalize Wishlist Form -->
 <h2>Finalize and Create Wishlist</h2>
-<form th:action="@{/wishlists/finalize}" th:object="${wishList}" method="post">
+<form th:action="@{/wishlists/create}" th:object="${wishList}" method="post">
   <div>
     <label>Event Name:</label>
     <input type="text" th:field="*{eventName}" placeholder="Enter event name" required />
@@ -42,6 +42,6 @@
   <button type="submit">Create Wishlist</button>
 </form>
 
-<a href="/wishlists">Back to Your Wishlists</a>
+<a href="/profile">Back to Your Profile< page/a>
 </body>
 </html>

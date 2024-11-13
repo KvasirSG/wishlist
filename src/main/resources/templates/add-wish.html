@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add Wish</title>
+    <title>Add New Wishes</title>
 </head>
 <body>
-<h1>Add Wish to Wishlist</h1>
+<h1>Add New Wishes</h1>
 
-<form th:action="@{/wishlists/{id}/addWish(id=${wishList.id})}" th:object="${wish}" method="post">
+<!-- Form to Add Multiple Wishes Dynamically -->
+<h2>Add Wish</h2>
+<form th:action="@{/wishes/ready}" method="post">
     <div>
         <label>Wish Name:</label>
-        <input type="text" th:field="*{name}" placeholder="Enter wish name" required />
+        <input type="text" name="name" placeholder="Enter wish name" required />
     </div>
     <div>
         <label>Description:</label>
-        <input type="text" th:field="*{description}" placeholder="Enter wish description" />
+        <input type="text" name="description" placeholder="Enter wish description" />
     </div>
-    <button type="submit">Add Wish to Wishlist</button>
+    <button type="submit">Add to Ready List</button>
 </form>
 
-<a th:href="@{/wishlists}">View Wishlists</a>
+<!-- Display Ready Wishes -->
+<h2>Ready Wishes</h2>
+<div th:if="${#lists.size(session.readyWishes) > 0}">
+    <ul>
+        <li th:each="wish : ${session.readyWishes}">
+            <span th:text="${wish.name}">Wish Name</span>: <span th:text="${wish.name}">Description</span>
+        </li>
+    </ul>
+</div>
+<div th:if="${#lists.isEmpty(session.readyWishes)}">
+    <p>No wishes added yet.</p>
+</div>
+
+<!-- Finalize Button to Add All Ready Wishes to Available Wishes -->
+<form th:action="@{/wishes/finalize}" method="post">
+    <button type="submit">Finalize and Add All Wishes</button>
+</form>
+
+<a href="/profile">Back to your profile page</a>
 </body>
 </html>
