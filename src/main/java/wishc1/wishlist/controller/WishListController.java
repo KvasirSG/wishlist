@@ -140,18 +140,39 @@ public class WishListController {
      * @param authentication the authentication object to retrieve current user
      * @return the share-wishlists page
      */
-    @GetMapping("/share")
-    public String showShareWishListsForm(Model model, Authentication authentication) {
+    @GetMapping("/{id}/share")
+    public String showShareWishListForm(@PathVariable Long id, Model model, Authentication authentication) {
+        // Check if user is authenticated
         if (authentication != null && authentication.isAuthenticated()) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             AppUser currentUser = userDetails.getAppUser();
 
-            model.addAttribute("wishLists", wishListService.getWishListsByOwner(currentUser.getId())); // Show user's wishlists
-            model.addAttribute("users", appUserService.getAllUsers());  // List all potential recipients
-            return "share-wishlist";
+            // Retrieve the specific wishlist by ID
+            Optional<WishList> wishList = wishListService.getWishListById(id);
+
+            // If the wishlist exists and belongs to the current user
+            if (wishList.isPresent() && wishList.get().getOwner().equals(currentUser)) {
+                model.addAttribute("wishList", wishList.get());
+                model.addAttribute("users", appUserService.getAllUsers());  // Fetch all users for sharing
+                return "share-wishlist";  // Assuming `share-wishlist.html` is your template for sharing
+            } else {
+                model.addAttribute("error", "Wishlist not found or access denied.");
+                return "error"; // Redirect or display an error page
+            }
         }
-        return "redirect:/login";
+        return "redirect:/login";  // Redirect to login if not authenticated
     }
+
+    @PostMapping("/shareSelected")
+    public String shareWishlists(@RequestParam List<Long> wishListIds,
+                                 @RequestParam List<String> recipientUsernames,
+                                 RedirectAttributes redirectAttributes) {
+        // Your logic to handle sharing the wishlists with specified recipients
+        redirectAttributes.addFlashAttribute("success", "Wishlist(s) shared successfully.");
+        return "redirect:/wishlists/profile"; // Redirect after processing
+    }
+
+
 
     /**
      * Share selected wishlists with specified recipients by their emails.
