@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Wish to Wishlist</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="bg-gray-100">
+
+<div class="container shadow bg-gray-800 rounded mt-4 p-6">
+    <h1 class="text-center text-xl text-blue-400 mb-6">Add Wish to <span th:text="${wishList.eventName}">Wishlist</span></h1>
+
+    <!-- Form to select a wish to add to the wishlist -->
+    <form th:action="@{|/wishlists/${wishList.id}/addWish|}" method="post">
+        <div class="mb-4">
+            <label for="wishId" class="block text-blue-300 mb-1">Select a Wish:</label>
+            <select id="wishId" name="wishId" class="input-field">
+                <option value="" disabled selected>Select a wish</option>
+                <option th:each="wish : ${availableWishes}" th:value="${wish.id}" th:text="${wish.name}"></option>
+            </select>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="button bg-blue-500 hover:bg-blue-600">Add Wish</button>
+    </form>
+
+    <!-- Flash messages -->
+    <div th:if="${success}" class="text-green-500 text-center mt-4" th:text="${success}"></div>
+    <div th:if="${error}" class="text-red-500 text-center mt-4" th:text="${error}"></div>
+
+    <!-- Back to wishlists link -->
+    <div class="text-center mt-6">
+        <a href="/wishlists/profile" class="text-blue-400 hover:underline">Back to Wishlists</a>
+    </div>
+</div>
+
+</body>
+</html>

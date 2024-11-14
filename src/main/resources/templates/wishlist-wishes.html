@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wishes in Wishlist</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="bg-gray-100">
+
+<div class="container shadow bg-gray-800 rounded mt-4 p-6">
+    <h2 th:text="${wishList.eventName}" class="text-center text-xl text-blue-400 mb-4">Wishlist Name</h2>
+    <p th:text="'Event Date: ' + ${wishList.eventDate}" class="text-center text-gray-300">Event Date</p>
+
+    <!-- Wishes Table -->
+    <h3 class="text-center text-blue-500">Wishes in this Wishlist</h3>
+    <table class="table-auto w-full mt-4">
+        <thead>
+        <tr>
+            <th>Wish Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="wish : ${wishes}">
+            <td th:text="${wish.name}">Wish Name</td>
+            <td th:text="${wish.description}">Description</td>
+            <td>
+                <!-- Display the Remove button only if the current user is the owner -->
+                <form th:if="${isOwner}" th:action="@{/wishlists/{wishlistId}/wishes/{wishId}/remove(wishlistId=${wishList.id}, wishId=${wish.id})}" method="post">
+                    <button type="submit" class="button-delete">Remove</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Back to Wishlists link -->
+    <div class="text-center mt-4">
+        <a href="/wishlists" class="button">Back to Wishlists</a>
+    </div>
+</div>
+
+</body>
+</html>

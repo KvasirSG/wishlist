@@ -64,4 +64,10 @@ public class WishListService {
         return wishListRepository.findAllById(ids);
     }
 
+    public void removeWishFromWishList(WishList wishList, Wish wish) {
+        wishList.getWishes().remove(wish);  // Remove the wish from the list
+        wishListRepository.save(wishList);   // Update the wishlist in the database
+    }
+
+
 }

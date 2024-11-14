@@ -35,7 +35,8 @@
         </thead>
         <tbody>
         <tr th:each="wishList : ${wishLists}">
-            <td th:text="${wishList.eventName}">Event Name</td>
+            <!-- Link event name to the wishlist details page -->
+            <td><a th:href="@{/wishlists/{id}/wishes(id=${wishList.id})}" th:text="${wishList.eventName}" class="link">Event Name</a></td>
             <td th:text="${wishList.eventDate}">Event Date</td>
             <td>
                 <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}" class="link">Add Wishes</a> |

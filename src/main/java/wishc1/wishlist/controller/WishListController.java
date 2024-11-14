@@ -77,6 +77,23 @@ public class WishListController {
         return "redirect:/profile";
     }
 
+    @GetMapping("/{id}/addWish")
+    public String showAddWishForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<WishList> wishList = wishListService.getWishListById(id);
+
+        if (wishList.isPresent()) {
+            model.addAttribute("wishList", wishList.get());
+            model.addAttribute("availableWishes", wishService.getAllWishes());
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Wishlist not found.");
+            return "redirect:/wishlists/profile";
+        }
+
+        return "addWishToWishList"; // This should match the template name below
+    }
+
+
+
     /**
      * Add a specific wish to a wishlist.
      *
@@ -97,26 +114,19 @@ public class WishListController {
             redirectAttributes.addFlashAttribute("error", "Wish or wishlist not found.");
         }
 
-        return "redirect:/wishlists";
+        // Redirecting to a GET request to display the updated wishlist
+        return "redirect:/wishlists/" + id + "/addWish";
     }
+
 
     /**
      * Display the user's own wishlists.
      *
-     * @param model the model to hold the user's wishlists
      * @return the user-wishlists page
      */
     @GetMapping
-    public String viewUserWishLists(Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            AppUser currentUser = userDetails.getAppUser();
-            // Initialize wishlists to avoid LazyInitializationException
-            List<WishList> wishLists = wishListService.getWishListsByOwner(currentUser.getId());
-            model.addAttribute("wishLists", wishLists);
-            return "profile";
-        }
-        return "redirect:/login";
+    public String viewUserWishLists() {
+        return "redirect:/wishlists/profile";
     }
 
     /**
@@ -253,5 +263,41 @@ public class WishListController {
         }
         return "redirect:/login";
     }
+
+    @GetMapping("/{id}/wishes")
+    public String showWishesInWishlist(@PathVariable Long id, Model model, Authentication authentication) {
+        Optional<WishList> wishList = wishListService.getWishListById(id);
+
+        if (wishList.isPresent()) {
+            AppUser currentUser = ((CustomUserDetails) authentication.getPrincipal()).getAppUser();
+            boolean isOwner = wishList.get().getOwner().equals(currentUser);
+
+            model.addAttribute("wishList", wishList.get());
+            model.addAttribute("wishes", wishList.get().getWishes());
+            model.addAttribute("isOwner", isOwner);  // Pass ownership status to the view
+        } else {
+            model.addAttribute("error", "Wishlist not found.");
+        }
+
+        return "wishlist-wishes";  // Assuming this is the template name
+    }
+
+    @PostMapping("/{wishlistId}/wishes/{wishId}/remove")
+    public String removeWishFromWishList(@PathVariable Long wishlistId, @PathVariable Long wishId, RedirectAttributes redirectAttributes) {
+        Optional<WishList> wishListOptional = wishListService.getWishListById(wishlistId);
+        Optional<Wish> wishOptional = wishService.getWishById(wishId);
+
+        if (wishListOptional.isPresent() && wishOptional.isPresent()) {
+            wishListService.removeWishFromWishList(wishListOptional.get(), wishOptional.get());
+            redirectAttributes.addFlashAttribute("success", "Wish removed from wishlist.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Wish or wishlist not found.");
+        }
+
+        return "redirect:/wishlists/" + wishlistId + "/wishes";
+    }
+
+
+
 
 }
