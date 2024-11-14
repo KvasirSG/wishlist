@@ -118,7 +118,6 @@ public class WishListController {
         return "redirect:/wishlists/" + id + "/addWish";
     }
 
-
     /**
      * Display the user's own wishlists.
      *
@@ -135,13 +134,21 @@ public class WishListController {
      * @param model the model to hold the shared wishlists
      * @return the shared-wishlists page
      */
-    @GetMapping("/shared")
-    public String viewSharedWishLists(Model model) {
+    @GetMapping("/shared/{id}/view")
+    public String viewSharedWishList(@PathVariable Long id, Model model, Authentication authentication) {
         AppUser currentUser = getCurrentUser();
-        List<WishList> sharedWishLists = wishListService.getWishListsSharedWithUser(currentUser);
-        model.addAttribute("sharedWishLists", sharedWishLists);
-        return "share-wishlist";
+        Optional<WishList> sharedWishList = wishListService.getWishListById(id);
+
+        if (sharedWishList.isPresent() && sharedWishList.get().getViewers().contains(currentUser)) {
+            model.addAttribute("wishList", sharedWishList.get());
+            model.addAttribute("wishes", sharedWishList.get().getWishes());
+            return "view-shared-wishlist";
+        } else {
+            model.addAttribute("error", "You do not have access to view this wishlist.");
+            return "error";
+        }
     }
+
 
     /**
      * Display the form to share multiple wishlists with multiple recipients.
@@ -175,12 +182,27 @@ public class WishListController {
 
     @PostMapping("/shareSelected")
     public String shareWishlists(@RequestParam List<Long> wishListIds,
-                                 @RequestParam List<String> recipientUsernames,
+                                 @RequestParam(required = false) List<String> recipientEmails,
                                  RedirectAttributes redirectAttributes) {
-        // Your logic to handle sharing the wishlists with specified recipients
+        if (recipientEmails == null || recipientEmails.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please select at least one recipient.");
+            return "redirect:/wishlists/profile";
+        }
+
+        List<AppUser> recipients = appUserService.getUsersByEmails(recipientEmails);  // Get the list of users by email
+        List<WishList> wishLists = wishListService.getWishListsByIds(wishListIds);
+
+        for (WishList wishList : wishLists) {
+            for (AppUser recipient : recipients) {
+                wishListService.shareWishListWithUser(wishList, recipient);  // Share each wishlist with each user
+            }
+        }
+
         redirectAttributes.addFlashAttribute("success", "Wishlist(s) shared successfully.");
-        return "redirect:/wishlists/profile"; // Redirect after processing
+        return "redirect:/wishlists/profile";
     }
+
+
 
 
 
@@ -249,15 +271,22 @@ public class WishListController {
         session.setAttribute("readyWishes", readyWishes);  // Update the session attribute
         return "redirect:/wishlists/new";  // Refresh the form to show updated wishes
     }
+
     @GetMapping("/profile")
     public String userProfile(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             AppUser appUser = userDetails.getAppUser();
 
+            // Fetch user's own wishlists
             model.addAttribute("appUser", appUser);
-            model.addAttribute("wishLists", wishListService.getWishListsByOwner(appUser.getId()));  // Fetch user's wishlists
-            model.addAttribute("users", appUserService.getAllUsers());  // Fetch all users for sharing
+            model.addAttribute("wishLists", wishListService.getWishListsByOwner(appUser.getId()));
+
+            // Fetch wishlists shared with the user
+            List<WishList> sharedWishLists = wishListService.getWishListsSharedWithUser(appUser);
+            model.addAttribute("sharedWishLists", sharedWishLists);
+
+            model.addAttribute("users", appUserService.getAllUsers());
 
             return "profile";
         }
