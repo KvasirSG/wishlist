@@ -113,7 +113,7 @@
             <td th:text="${sharedWishList.eventDate}">Event Date</td>
             <td>
                 <!-- Button to view shared wishlist items -->
-                <a th:href="@{/wishlists/shared/{id}/view(id=${sharedWishList.id})}">
+                <a th:href="@{/wishlists/{id}/wishes(id=${sharedWishList.id})}">
                     <button>View Items</button>
                 </a>
             </td>
