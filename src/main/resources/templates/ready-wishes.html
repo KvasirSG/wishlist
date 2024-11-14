@@ -2,29 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Ready Wishes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
-<h1>Ready Wishes</h1>
+<body class="bg-gray-100">
+<div class="container shadow bg-white rounded mt-4 p-4">
 
-<div th:if="${#lists.isEmpty(readyWishes)}">
-    <p>No ready wishes to add.</p>
+    <h1 class="text-center">Ready Wishes</h1>
+
+    <!-- Conditional message if no wishes are available -->
+    <div th:if="${#lists.isEmpty(readyWishes)}" class="text-center text-red-500">
+        <p>No ready wishes to add.</p>
+    </div>
+
+    <!-- Display table of ready wishes if there are any -->
+    <table th:unless="${#lists.isEmpty(readyWishes)}">
+        <thead>
+        <tr>
+            <th>Wish Name</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="wish : ${readyWishes}">
+            <td th:text="${wish.name}">Wish Name</td>
+            <td th:text="${wish.description}">Description</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Add All Wishes to List Button -->
+    <form th:action="@{/wishes/addAll}" method="post" th:if="${!#lists.isEmpty(readyWishes)}" class="text-center">
+        <button type="submit" class="button-add-all">Add All Wishes to List</button>
+    </form>
+
+    <!-- Link to add more wishes -->
+    <div class="text-center mt-4">
+        <a href="/wishes/add" class="text-blue-400 hover:text-blue-300">Add More Wishes</a>
+    </div>
+
 </div>
-
-<table th:unless="${#lists.isEmpty(readyWishes)}">
-    <tr>
-        <th>Wish Name</th>
-        <th>Description</th>
-    </tr>
-    <tr th:each="wish : ${readyWishes}">
-        <td th:text="${wish.name}">Wish Name</td>
-        <td th:text="${wish.description}">Description</td>
-    </tr>
-</table>
-
-<form th:action="@{/wishes/addAll}" method="post" th:if="${!#lists.isEmpty(readyWishes)}">
-    <button type="submit">Add All Wishes to List</button>
-</form>
-
-<a href="/wishes/add">Add More Wishes</a>
 </body>
 </html>

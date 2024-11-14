@@ -2,47 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Create New Wishlist</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
-<h1>Create a New Wishlist</h1>
+<body class="bg-gray-100">
+<!-- Main Container -->
+<div class="container bg-gray-800 p-6 rounded shadow-lg text-gray-300">
+  <!-- Page Title -->
+  <h1 class="text-center text-blue-400 mb-6">Create a New Wishlist</h1>
 
-<!-- Form to Select from Available Wishes -->
-<h2>Select a Wish from Available Items</h2>
-<form th:action="@{/wishlists/addReadyWish}" method="post">
-  <select name="wishId">
-    <option th:each="wish : ${availableWishes}" th:value="${wish.id}" th:text="${wish.name}">Wish Name</option>
-  </select>
-  <button type="submit">Add Selected Wish</button>
-</form>
+  <!-- Form to Select from Available Wishes -->
+  <h2 class="text-blue-400 mb-4">Select a Wish from Available Items</h2>
+  <form th:action="@{/wishlists/addReadyWish}" method="post" class="mb-6">
+    <div class="mb-4">
+      <select name="wishId" class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option th:each="wish : ${availableWishes}" th:value="${wish.id}" th:text="${wish.name}">Wish Name</option>
+      </select>
+    </div>
+    <button type="submit" class="button">Add Selected Wish</button>
+  </form>
 
-<!-- Display Ready Wishes -->
-<h2>Ready Wishes</h2>
-<div th:if="${#lists.size(session.readyWishes) > 0}">
-  <ul>
-    <li th:each="wish : ${session.readyWishes}">
-      <span th:text="${wish.name}">Wish Name</span>: <span th:text="${wish.description}">Description</span>
-    </li>
-  </ul>
-</div>
-<div th:if="${#lists.isEmpty(session.readyWishes)}">
-  <p>No wishes added yet.</p>
-</div>
-
-<!-- Finalize Wishlist Form -->
-<h2>Finalize and Create Wishlist</h2>
-<form th:action="@{/wishlists/create}" th:object="${wishList}" method="post">
-  <div>
-    <label>Event Name:</label>
-    <input type="text" th:field="*{eventName}" placeholder="Enter event name" required />
+  <!-- Display Ready Wishes -->
+  <h2 class="text-blue-400 mb-4">Ready Wishes</h2>
+  <div th:if="${#lists.size(session.readyWishes) > 0}" class="mb-6">
+    <ul class="list-disc pl-5 space-y-2">
+      <li th:each="wish : ${session.readyWishes}">
+        <span th:text="${wish.name}" class="font-semibold">Wish Name</span>:
+        <span th:text="${wish.description}">Description</span>
+      </li>
+    </ul>
   </div>
-  <div>
-    <label>Event Date:</label>
-    <input type="date" th:field="*{eventDate}" required />
+  <div th:if="${#lists.isEmpty(session.readyWishes)}" class="text-center text-gray-400 mb-6">
+    <p>No wishes added yet.</p>
   </div>
-  <button type="submit">Create Wishlist</button>
-</form>
 
-<a href="/profile">Back to Your Profile Page</a>
+  <!-- Finalize Wishlist Form -->
+  <h2 class="text-blue-400 mb-4">Finalize and Create Wishlist</h2>
+  <form th:action="@{/wishlists/create}" th:object="${wishList}" method="post" class="space-y-4 mb-6">
+    <div>
+      <label class="block mb-1 text-gray-300">Event Name:</label>
+      <input type="text" th:field="*{eventName}" placeholder="Enter event name" required class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+    </div>
+    <div>
+      <label class="block mb-1 text-gray-300">Event Date:</label>
+      <input type="date" th:field="*{eventDate}" required class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+    </div>
+    <button type="submit" class="button">Create Wishlist</button>
+  </form>
 
+  <!-- Back to Profile Link -->
+  <div class="text-center mt-6">
+    <a href="/profile" class="text-blue-400 hover:text-blue-300">Back to Your Profile Page</a>
+  </div>
+</div>
 </body>
 </html>

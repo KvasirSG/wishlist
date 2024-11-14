@@ -2,28 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Saved Wishes</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
-<h1>Saved Wishes</h1>
+<body class="bg-gray-100">
+<div class="container shadow bg-white rounded mt-4 p-4">
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Actions</th>
-  </tr>
-  <tr th:each="wish : ${wishes}">
-    <td th:text="${wish.name}">Wish Name</td>
-    <td th:text="${wish.description}">Wish Description</td>
-    <td>
-      <a th:href="@{/wishes/{id}/edit(id=${wish.id})}">Edit</a>
-      <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post" style="display:inline;">
-        <button type="submit">Delete</button>
-      </form>
-    </td>
-  </tr>
-</table>
+  <h1 class="text-center">Saved Wishes</h1>
 
-<a href="/wishes/add">Add New Wishes</a>
+  <table>
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="wish : ${wishes}">
+      <td th:text="${wish.name}">Wish Name</td>
+      <td th:text="${wish.description}">Wish Description</td>
+      <td>
+        <a th:href="@{/wishes/{id}/edit(id=${wish.id})}" class="text-blue-400 hover:text-blue-300">Edit</a>
+        <form th:action="@{/wishes/{id}/delete(id=${wish.id})}" method="post" style="display:inline;">
+          <button type="submit" class="button-delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="text-center">
+    <a href="/wishes/add" class="text-blue-400 hover:text-blue-300">Add New Wishes</a>
+  </div>
+
+</div>
 </body>
 </html>
