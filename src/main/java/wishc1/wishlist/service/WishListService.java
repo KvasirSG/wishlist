@@ -69,5 +69,10 @@ public class WishListService {
         wishListRepository.save(wishList);   // Update the wishlist in the database
     }
 
+    public void deleteWishListById(Long id) {
+        wishListRepository.deleteById(id);
+    }
+
+
 
 }
