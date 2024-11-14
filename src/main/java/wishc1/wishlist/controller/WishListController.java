@@ -182,14 +182,14 @@ public class WishListController {
 
     @PostMapping("/shareSelected")
     public String shareWishlists(@RequestParam List<Long> wishListIds,
-                                 @RequestParam(required = false) List<String> recipientEmails,
+                                 @RequestParam(required = false) List<String> recipientUsernames,
                                  RedirectAttributes redirectAttributes) {
-        if (recipientEmails == null || recipientEmails.isEmpty()) {
+        if (recipientUsernames == null || recipientUsernames.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Please select at least one recipient.");
             return "redirect:/wishlists/profile";
         }
 
-        List<AppUser> recipients = appUserService.getUsersByEmails(recipientEmails);  // Get the list of users by email
+        List<AppUser> recipients = appUserService.getUsersByUsernames(recipientUsernames);  // Get the list of users by email
         List<WishList> wishLists = wishListService.getWishListsByIds(wishListIds);
 
         for (WishList wishList : wishLists) {

@@ -83,4 +83,7 @@ public class AppUserService {
     public List<AppUser> getUsersByEmails(List<String> emails) {
         return appUserRepository.findAllByEmailIn(emails);
     }
+    public List<AppUser> getUsersByUsernames(List<String> usernames) {
+        return appUserRepository.findAllByUsernameIn(usernames);
+    }
 }
