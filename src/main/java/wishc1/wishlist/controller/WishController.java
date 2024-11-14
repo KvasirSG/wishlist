@@ -99,9 +99,6 @@ public class WishController {
         return "list-wishes";  // Returns the "list-wishes.html" Thymeleaf template
     }
 
-    /**
-     * Display the edit form for a specific wish.
-     */
     @GetMapping("/wishes/edit")
     public String showEditWishesPage(Model model) {
         List<Wish> wishes = wishService.getAllWishes(); // Fetch all wishes
@@ -119,25 +116,27 @@ public class WishController {
         return "redirect:/wishes";  // Redirect to the main list of saved wishes
     }
 
-    /**
-     * Process deletion of a specific wish.
-     */
-    @PostMapping("/wishes/{id}/delete")
-    public String deleteWish(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        wishService.deleteWish(id); // Delete the wish from the database
-        redirectAttributes.addFlashAttribute("success", "Wish deleted successfully.");
-        return "redirect:/wishes";  // Redirect to the main list of saved wishes
+
+    @PostMapping("/wishes/deleteSelected")
+    public String deleteSelectedWishes(@RequestParam List<Long> selectedWishes) {
+        for (Long wishId : selectedWishes) {
+            wishService.deleteWish(wishId); // Delete each selected wish
+        }
+        return "redirect:/wishes/edit"; // Redirect back to the edit page
     }
 
-    /**
-     * Process deletion of selected wishes from a list.
-     */
-    @PostMapping("/wishes/deleteSelected")
-    public String deleteSelectedWishes(@RequestParam List<Long> selectedWishes, RedirectAttributes redirectAttributes) {
-        for (Long wishId : selectedWishes) {
-            wishService.deleteWish(wishId);
+    @PostMapping("/wishes/updateAll")
+    public String updateSelectedWishes(@RequestParam List<Long> selectedWishes,
+                                       @RequestParam List<String> names,
+                                       @RequestParam List<String> descriptions) {
+        for (int i = 0; i < selectedWishes.size(); i++) {
+            Long wishId = selectedWishes.get(i);
+            Wish updatedWish = wishService.getWishById(wishId)
+                    .orElseThrow(() -> new RuntimeException("Wish not found with id " + wishId));
+            updatedWish.setName(names.get(i));
+            updatedWish.setDescription(descriptions.get(i));
+            wishService.saveWish(updatedWish); // Persist updates
         }
-        redirectAttributes.addFlashAttribute("success", "Selected wishes have been deleted.");
-        return "redirect:/wishes";  // Redirect to the main list of saved wishes
+        return "redirect:/wishes/edit"; // Redirect back to the edit page
     }
 }

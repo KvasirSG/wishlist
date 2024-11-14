@@ -6,19 +6,18 @@
 <body>
 <h1>Edit Wishes</h1>
 
-<!-- List of Wishes for Editing and Deletion -->
+<!-- Form to Update Selected Wishes -->
 <form th:action="@{/wishes/updateAll}" method="post">
     <table>
         <tr>
             <th>Select</th>
             <th>Wish Name</th>
             <th>Description</th>
-            <th>Actions</th>
         </tr>
         <tr th:each="wish : ${wishes}">
             <td><input type="checkbox" name="selectedWishes" th:value="${wish.id}" /></td>
-            <td><input type="text" th:field="*{wishes[__${wish.id}__].name}" th:value="${wish.name}" /></td>
-            <td><input type="text" th:field="*{wishes[__${wish.id}__].description}" th:value="${wish.description}" /></td>
+            <td><input type="text" name="names" th:value="${wish.name}" /></td>
+            <td><input type="text" name="descriptions" th:value="${wish.description}" /></td>
         </tr>
     </table>
     <button type="submit">Save Changes to Selected Wishes</button>
@@ -26,6 +25,18 @@
 
 <!-- Form to Delete Selected Wishes -->
 <form th:action="@{/wishes/deleteSelected}" method="post">
+    <table>
+        <tr>
+            <th>Select</th>
+            <th>Wish Name</th>
+            <th>Description</th>
+        </tr>
+        <tr th:each="wish : ${wishes}">
+            <td><input type="checkbox" name="selectedWishes" th:value="${wish.id}" /></td>
+            <td th:text="${wish.name}"></td>
+            <td th:text="${wish.description}"></td>
+        </tr>
+    </table>
     <button type="submit">Delete Selected Wishes</button>
 </form>
 

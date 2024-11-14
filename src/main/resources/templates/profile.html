@@ -48,7 +48,7 @@
 
 <!-- Sharing Section -->
 <h2>Share a Wishlist</h2>
-<form th:action="@{/wishlists/share}" method="post">
+<form th:action="@{/wishlists/shared}" method="post">
     <div th:if="${wishLists != null}">
         <label>Select a Wishlist to Share:</label>
         <ul>
@@ -67,7 +67,9 @@
     <div th:if="${users != null}">
         <ul>
             <li th:each="user : ${users}">
-                <input type="checkbox" name="recipientUsername" th:value="${user.username}" />
+                <label>
+                    <input type="checkbox" name="recipientUsername" th:value="${appUser.getUsername()}" />
+                </label>
             </li>
         </ul>
     </div>
