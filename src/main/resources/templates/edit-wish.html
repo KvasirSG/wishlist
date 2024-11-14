@@ -2,44 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Edit Wishes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
-<h1>Edit Wishes</h1>
+<body class="bg-gray-100">
+<div class="container shadow bg-white rounded mt-4 p-4">
+    <h1 class="text-center text-lg text-blue-500 mb-4">Edit Wishes</h1>
 
-<!-- Form to Update Selected Wishes -->
-<form th:action="@{/wishes/updateAll}" method="post">
-    <table>
-        <tr>
-            <th>Select</th>
-            <th>Wish Name</th>
-            <th>Description</th>
-        </tr>
-        <tr th:each="wish : ${wishes}">
-            <td><input type="checkbox" name="selectedWishes" th:value="${wish.id}" /></td>
-            <td><input type="text" name="names" th:value="${wish.name}" /></td>
-            <td><input type="text" name="descriptions" th:value="${wish.description}" /></td>
-        </tr>
-    </table>
-    <button type="submit">Save Changes to Selected Wishes</button>
-</form>
+    <!-- Form to Update Selected Wishes -->
+    <h2 class="text-blue-400 mb-2">Update Wishes</h2>
+    <form th:action="@{/wishes/updateAll}" method="post">
+        <table class="w-full mb-4 border border-gray-500">
+            <tr>
+                <th class="text-left p-2 bg-gray-700">Select</th>
+                <th class="text-left p-2 bg-gray-700">Wish Name</th>
+                <th class="text-left p-2 bg-gray-700">Description</th>
+            </tr>
+            <tr th:each="wish : ${wishes}" class="hover:bg-gray-800">
+                <td class="p-2 text-center"><input type="checkbox" name="selectedWishes" th:value="${wish.id}" /></td>
+                <td class="p-2"><input type="text" name="names" th:value="${wish.name}" class="input-field" /></td>
+                <td class="p-2"><input type="text" name="descriptions" th:value="${wish.description}" class="input-field" /></td>
+            </tr>
+        </table>
+        <button type="submit" class="button bg-blue-500 hover:bg-blue-600">Save Changes to Selected Wishes</button>
+    </form>
 
-<!-- Form to Delete Selected Wishes -->
-<form th:action="@{/wishes/deleteSelected}" method="post">
-    <table>
-        <tr>
-            <th>Select</th>
-            <th>Wish Name</th>
-            <th>Description</th>
-        </tr>
-        <tr th:each="wish : ${wishes}">
-            <td><input type="checkbox" name="selectedWishes" th:value="${wish.id}" /></td>
-            <td th:text="${wish.name}"></td>
-            <td th:text="${wish.description}"></td>
-        </tr>
-    </table>
-    <button type="submit">Delete Selected Wishes</button>
-</form>
+    <!-- Form to Delete Selected Wishes -->
+    <h2 class="text-blue-400 mt-6 mb-2">Delete Wishes</h2>
+    <form th:action="@{/wishes/deleteSelected}" method="post">
+        <table class="w-full mb-4 border border-gray-500">
+            <tr>
+                <th class="text-left p-2 bg-gray-700">Select</th>
+                <th class="text-left p-2 bg-gray-700">Wish Name</th>
+                <th class="text-left p-2 bg-gray-700">Description</th>
+            </tr>
+            <tr th:each="wish : ${wishes}" class="hover:bg-gray-800">
+                <td class="p-2 text-center"><input type="checkbox" name="selectedWishes" th:value="${wish.id}" /></td>
+                <td class="p-2" th:text="${wish.name}"></td>
+                <td class="p-2" th:text="${wish.description}"></td>
+            </tr>
+        </table>
+        <button type="submit" class="button button-delete">Delete Selected Wishes</button>
+    </form>
 
-<a href="/profile">Back to Your Profile page</a>
+    <a href="/profile" class="text-blue-500 hover:text-blue-400 mt-4 inline-block">Back to Your Profile Page</a>
+</div>
 </body>
 </html>

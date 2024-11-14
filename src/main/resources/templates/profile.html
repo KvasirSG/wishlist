@@ -2,112 +2,100 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>User Profile</title>
-    <style>
-        /* Styling for success and error messages */
-        .alert {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
+<body class="bg-gray-100">
+
+<!-- Logout Link -->
+<div class="text-right p-4">
+    <a href="/logout" class="text-blue-400 hover:underline">Logout</a>
+</div>
 
 <!-- Display Success or Error Messages -->
-<div th:if="${success}" class="alert alert-success">
+<div th:if="${success}" class="alert alert-success text-green-500">
     <p th:text="${success}"></p>
 </div>
-<div th:if="${error}" class="alert alert-danger">
+<div th:if="${error}" class="alert alert-danger text-red-500">
     <p th:text="${error}"></p>
 </div>
 
-<h2>Welcome, <span th:text="${appUser.username}"></span>!</h2>
-<p>Your email: <span th:text="${appUser.email}"></span></p>
-
-<!-- Button to Create a New Wishlist -->
-<a href="/wishlists/new">
-    <button>Create New Wishlist</button>
-</a>
+<h2 class="text-center text-lg text-blue-500">Welcome, <span th:text="${appUser.username}"></span>!</h2>
+<p class="text-center">Your email: <span th:text="${appUser.email}"></span></p>
 
 <!-- List of User's Existing Wishlists -->
-<h2>Your Wishlists</h2>
+<h2 class="text-center text-blue-500">Your Wishlists</h2>
 <div th:if="${wishLists != null}">
-    <table>
+    <table class="table-auto w-full">
+        <thead>
         <tr>
             <th>Event Name</th>
             <th>Event Date</th>
             <th>Actions</th>
         </tr>
+        </thead>
+        <tbody>
         <tr th:each="wishList : ${wishLists}">
             <td th:text="${wishList.eventName}">Event Name</td>
             <td th:text="${wishList.eventDate}">Event Date</td>
             <td>
-                <!-- Link to View/Add Wishes -->
-                <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}">Add Wishes</a> |
-                <!-- Link to Share Wishlist -->
-                <a th:href="@{/wishlists/{id}/share(id=${wishList.id})}">Share Wishlist</a>
+                <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}" class="link">Add Wishes</a> |
+                <a th:href="@{/wishlists/{id}/share(id=${wishList.id})}" class="link">Share Wishlist</a>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
 <div th:unless="${wishLists != null}">
-    <p>You have no wishlists. Create your first wishlist above.</p>
+    <p class="text-center">You have no wishlists. Create your first wishlist above.</p>
+</div>
+
+<!-- Button to Create a New Wishlist -->
+<div class="text-center mb-4">
+    <a href="/wishlists/new" class="button">Create New Wishlist</a>
 </div>
 
 <!-- Buttons for Item Management -->
-<a href="/wishes/add">
-    <button>Add New Items</button>
-</a>
-
-<a href="/wishes/edit">
-    <button>Edit Existing Items</button>
-</a>
+<div class="text-center mt-4">
+    <a href="/wishes/add" class="button">Add New Items</a> |
+    <a href="/wishes/edit" class="button">Edit Existing Items</a>
+</div>
 
 <!-- Sharing Section -->
-<h2>Share a Wishlist</h2>
-<form th:action="@{/wishlists/shareSelected}" method="post">
+<h2 class="text-center text-blue-500 mt-8">Share a Wishlist</h2>
+<form th:action="@{/wishlists/shareSelected}" method="post" class="max-w-md mx-auto">
     <div th:if="${wishLists != null}">
-        <label>Select a Wishlist to Share:</label>
-        <ul>
+        <label class="block mb-2 text-sm font-bold">Select a Wishlist to Share:</label>
+        <ul class="mb-4">
             <li th:each="wishList : ${wishLists}">
-                <input type="radio" name="wishListIds" th:value="${wishList.id}" required />
-                <label th:text="${wishList.eventName}">Wishlist Name</label>
+                <label class="block">
+                    <input type="radio" name="wishListIds" th:value="${wishList.id}" required />
+                    <span th:text="${wishList.eventName}"></span>
+                </label>
             </li>
         </ul>
     </div>
     <div th:unless="${wishLists != null}">
-        <p>No wishlists available to share. Please create one first.</p>
+        <p class="text-center">No wishlists available to share. Please create one first.</p>
     </div>
 
     <!-- Display Recipients as Checkboxes -->
-    <h2>Select Recipients</h2>
+    <h2 class="text-center text-blue-500">Select Recipients</h2>
     <div th:if="${users != null}">
-        <ul>
+        <ul class="mb-4">
             <li th:each="user : ${users}">
-                <label>
+                <label class="block">
                     <input type="checkbox" name="recipientUsernames" th:value="${user.username}" />
-                    <span th:text="${user.username}"></span> <!-- Display recipient's username next to checkbox -->
+                    <span th:text="${user.username}"></span>
                 </label>
             </li>
         </ul>
     </div>
     <div th:unless="${users != null}">
-        <p>No recipients available.</p>
+        <p class="text-center">No recipients available.</p>
     </div>
 
     <!-- Submit to Share the Wishlist -->
-    <button type="submit">Share Wishlist</button>
+    <button type="submit" class="button">Share Wishlist</button>
 </form>
 
 </body>
