@@ -23,7 +23,7 @@
 
   <!-- Display Ready Wishes -->
   <h2 class="text-blue-400 mb-4">Ready Wishes</h2>
-  <div th:if="${#lists.size(session.readyWishes) > 0}" class="mb-6">
+  <div th:if="${session.readyWishes != null && #lists.size(session.readyWishes) > 0}" class="mb-6">
     <ul class="list-disc pl-5 space-y-2">
       <li th:each="wish : ${session.readyWishes}">
         <span th:text="${wish.name}" class="font-semibold">Wish Name</span>:
@@ -31,7 +31,7 @@
       </li>
     </ul>
   </div>
-  <div th:if="${#lists.isEmpty(session.readyWishes)}" class="text-center text-gray-400 mb-6">
+  <div th:if="${session.readyWishes == null || #lists.isEmpty(session.readyWishes)}" class="text-center text-gray-400 mb-6">
     <p>No wishes added yet.</p>
   </div>
 

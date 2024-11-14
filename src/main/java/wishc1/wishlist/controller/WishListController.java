@@ -37,6 +37,7 @@ public class WishListController {
         this.wishService = wishService;
     }
 
+
     /**
      * Display form to create a new wishlist.
      *
@@ -60,22 +61,33 @@ public class WishListController {
     @PostMapping("/create")
     public String createWishList(@ModelAttribute WishList wishList,
                                  Authentication authentication,
-                                 RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes,
+                                 HttpSession session) {
         if (authentication == null || !authentication.isAuthenticated()) {
             redirectAttributes.addFlashAttribute("error", "You must be logged in to create a wishlist.");
             return "redirect:/login";
         }
 
-        // Retrieve the currently authenticated user's email from the Authentication object
+        // Retrieve the authenticated user
         AppUser appUser = ((CustomUserDetails) authentication.getPrincipal()).getAppUser();
-
-        // Set the authenticated user as the owner of the new wishlist
         wishList.setOwner(appUser);
-        wishListService.createWishList(wishList.getEventName(), wishList.getEventDate(), appUser);
+
+        // Retrieve ready wishes from the session and set them on the wishList
+        List<Wish> readyWishes = (List<Wish>) session.getAttribute("readyWishes");
+        if (readyWishes != null) {
+            wishList.setWishes(readyWishes);  // Add wishes to wishList
+        }
+
+        // Save the wishList with the associated wishes
+        wishListService.saveWishList(wishList);
+
+        // Clear session-ready wishes after saving
+        session.removeAttribute("readyWishes");
 
         redirectAttributes.addFlashAttribute("success", "Wishlist created successfully.");
         return "redirect:/profile";
     }
+
 
     @GetMapping("/{id}/addWish")
     public String showAddWishForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -203,9 +215,6 @@ public class WishListController {
     }
 
 
-
-
-
     /**
      * Share selected wishlists with specified recipients by their emails.
      *
@@ -250,27 +259,40 @@ public class WishListController {
      */
     @GetMapping("/new")
     public String showNewWishListForm(HttpSession session, Model model) {
-        session.setAttribute("readyWishes", new ArrayList<Wish>());  // Initialize empty "ready wishes" list in session
+        // Initialize "readyWishes" list in session if not already present
+        if (session.getAttribute("readyWishes") == null) {
+            session.setAttribute("readyWishes", new ArrayList<Wish>());
+        }
         model.addAttribute("wishList", new WishList());
-        model.addAttribute("availableWishes", wishService.getAllWishes());  // Fetch all available wishes
-        return "new-wishlist";  // New template for creating the wishlist dynamically
+        model.addAttribute("availableWishes", wishService.getAllWishes());
+        return "new-wishlist";
     }
+
 
     /**
      * Add a selected wish from the available list to the "ready" list in the session.
      */
     @PostMapping("/addReadyWish")
     public String addReadyWish(@RequestParam("wishId") Long wishId, HttpSession session) {
+        // Retrieve the "readyWishes" list from session, initialize if null
         List<Wish> readyWishes = (List<Wish>) session.getAttribute("readyWishes");
+        if (readyWishes == null) {
+            readyWishes = new ArrayList<>();
+            session.setAttribute("readyWishes", readyWishes);
+        }
 
-        // Fetch the selected wish by ID and add a duplicate to readyWishes
+        // Fetch the selected wish and add it to "readyWishes"
         Wish selectedWish = wishService.getWishById(wishId).orElseThrow(() -> new IllegalArgumentException("Invalid wish ID"));
-        Wish duplicateWish = new Wish(selectedWish.getName(), selectedWish.getDescription(), selectedWish.getAddedDate());
-        readyWishes.add(duplicateWish);
+        readyWishes.add(new Wish(selectedWish.getName(), selectedWish.getDescription(), selectedWish.getAddedDate()));
 
-        session.setAttribute("readyWishes", readyWishes);  // Update the session attribute
-        return "redirect:/wishlists/new";  // Refresh the form to show updated wishes
+        // Update session attribute
+        session.setAttribute("readyWishes", readyWishes);
+        return "redirect:/wishlists/new";
     }
+
+
+
+
 
     @GetMapping("/profile")
     public String userProfile(Model model, Authentication authentication) {
@@ -302,13 +324,13 @@ public class WishListController {
             boolean isOwner = wishList.get().getOwner().equals(currentUser);
 
             model.addAttribute("wishList", wishList.get());
-            model.addAttribute("wishes", wishList.get().getWishes());
-            model.addAttribute("isOwner", isOwner);  // Pass ownership status to the view
+            model.addAttribute("wishes", wishList.get().getWishes()); // Ensure wishes are added here
+            model.addAttribute("isOwner", isOwner);
         } else {
             model.addAttribute("error", "Wishlist not found.");
         }
 
-        return "wishlist-wishes";  // Assuming this is the template name
+        return "wishlist-wishes";
     }
 
     @PostMapping("/{wishlistId}/wishes/{wishId}/remove")

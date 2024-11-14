@@ -21,11 +21,12 @@ public class WishList {
     @JoinColumn(name = "owner_id", nullable = false)
     private AppUser owner;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER) // Eager loading to ensure wishes are loaded immediately
     @JoinTable(
             name = "wishlist_wishes",
             joinColumns = @JoinColumn(name = "wishlist_id"),
             inverseJoinColumns = @JoinColumn(name = "wish_id")
+
     )
     private List<Wish> wishes;
 
@@ -35,6 +36,7 @@ public class WishList {
             joinColumns = @JoinColumn(name = "wishlist_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+
     private Set<AppUser> viewers;
 
     public WishList() {}

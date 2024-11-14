@@ -16,10 +16,12 @@ import java.util.Optional;
 public class WishListService {
 
     private final WishListRepository wishListRepository;
+    private final WishService wishService;
 
     @Autowired
-    public WishListService(WishListRepository wishListRepository) {
+    public WishListService(WishListRepository wishListRepository, WishService wishService) {
         this.wishListRepository = wishListRepository;
+        this.wishService = wishService;
     }
 
     public WishList createWishList(String eventName, LocalDate eventDate, AppUser owner) {
@@ -46,6 +48,17 @@ public class WishListService {
         wishList.addWish(wish);
         return wishListRepository.save(wishList);
     }
+    @Transactional
+    public WishList saveWishList(WishList wishList) {
+        // Ensure all Wishes in the WishList are saved
+        for (Wish wish : wishList.getWishes()) {
+            if (wish.getId() == null) {  // if Wish is not yet persisted
+                wishService.saveWish(wish);  // persist each Wish
+            }
+        }
+        return wishListRepository.save(wishList);  // now save WishList
+    }
+
     public void shareWishListWithUser(WishList wishList, AppUser user) {
         wishList.addViewer(user);
         wishListRepository.save(wishList);
@@ -72,6 +85,7 @@ public class WishListService {
     public void deleteWishListById(Long id) {
         wishListRepository.deleteById(id);
     }
+
 
 
 
