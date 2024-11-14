@@ -76,5 +76,14 @@ public class AppUser {
     public long getId() {
         return id;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AppUser) {
+            AppUser appUser = (AppUser) obj;
+            return email.equals(appUser.email);
+        }
+        return false;
+    }
 }
 
