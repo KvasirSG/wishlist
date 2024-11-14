@@ -2,6 +2,7 @@ package wishc1.wishlist.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +43,7 @@ public class WishList {
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.owner = owner;
+        this.viewers = new HashSet<>();  // Initialize viewers to avoid NullPointerException
     }
 
     // Getters and setters

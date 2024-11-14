@@ -12,7 +12,7 @@
 </div>
 
 <!-- Display Success or Error Messages -->
-<div th:if="${success}" class="alert alert-success text-green-500">
+<div th:if="${success}" class="alert alert-success">
     <p th:text="${success}"></p>
 </div>
 <div th:if="${error}" class="alert alert-danger text-red-500">
@@ -97,6 +97,33 @@
     <!-- Submit to Share the Wishlist -->
     <button type="submit" class="button">Share Wishlist</button>
 </form>
+
+<!-- Shared Wishlists Section -->
+<h2>Wishlists Shared with You</h2>
+<div th:if="${sharedWishLists != null && !sharedWishLists.isEmpty()}">
+    <table>
+        <tr>
+            <th>Event Name</th>
+            <th>Event Date</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="sharedWishList : ${sharedWishLists}">
+            <td th:text="${sharedWishList.eventName}">Event Name</td>
+            <td th:text="${sharedWishList.eventDate}">Event Date</td>
+            <td>
+                <!-- Button to view shared wishlist items -->
+                <a th:href="@{/wishlists/shared/{id}/view(id=${sharedWishList.id})}">
+                    <button>View Items</button>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:unless="${sharedWishLists != null && !sharedWishLists.isEmpty()}">
+    <p>No wishlists have been shared with you yet.</p>
+</div>
+
+
 
 </body>
 </html>

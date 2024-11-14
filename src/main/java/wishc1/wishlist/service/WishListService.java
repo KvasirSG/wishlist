@@ -50,7 +50,7 @@ public class WishListService {
         wishList.addViewer(user);
         wishListRepository.save(wishList);
     }
-
+    @Transactional(readOnly = true)
     public List<WishList> getWishListsSharedWithUser(AppUser user) {
         return wishListRepository.findByViewersContaining(user);
     }
