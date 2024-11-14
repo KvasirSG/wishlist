@@ -85,5 +85,9 @@ public class AppUser {
         }
         return false;
     }
+
+    public void setId(long l) {
+        this.id = l;
+    }
 }
 

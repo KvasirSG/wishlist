@@ -164,8 +164,7 @@ public class AuthControllerTest {
         when(customUserDetails.getAppUser()).thenReturn(appUser);
 
         mockMvc.perform(get("/profile"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile"))
-                .andExpect(model().attribute("appUser", appUser));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/wishlists/profile"));
     }
 }
