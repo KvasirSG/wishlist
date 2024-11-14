@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Share Wishlists</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="bg-gray-100">
+
+<div class="container shadow bg-gray-800 rounded mt-4 p-6">
+  <h1 class="text-center text-xl text-blue-400 mb-6">Share Your Wishlists</h1>
+
+  <!-- Display Wishlists with Checkboxes for Selection -->
+  <h2 class="text-blue-400 mb-4">Select Wishlists to Share</h2>
+  <form th:action="@{/wishlists/shareMultiple}" method="post">
+    <div th:if="${wishLists != null}" class="mb-6">
+      <ul class="space-y-2">
+        <li th:each="wishList : ${wishLists}" class="flex items-center">
+          <input type="checkbox" name="wishListIds" th:value="${wishList.id}" class="mr-2" />
+          <label th:text="${wishList.eventName}" class="text-blue-200">Wishlist Name</label>
+        </li>
+      </ul>
+    </div>
+    <div th:unless="${wishLists != null}" class="text-center text-red-500 mb-6">
+      <p>You have no wishlists available to share.</p>
+    </div>
+
+    <!-- Display Recipients with Checkboxes -->
+    <h2 class="text-blue-400 mb-4">Select Recipients</h2>
+    <div th:if="${users != null}" class="mb-6">
+      <ul class="space-y-2">
+        <li th:each="user : ${users}" class="flex items-center">
+          <input type="checkbox" name="recipientUsername" th:value="${user.username}" class="mr-2" />
+          <label th:text="${user.username}" class="text-blue-200">Recipient Username</label>
+        </li>
+      </ul>
+    </div>
+    <div th:unless="${users != null}" class="text-center text-red-500 mb-6">
+      <p>No recipients available.</p>
+    </div>
+
+    <!-- Submit Button to Share Selected Wishlists with Selected Recipients -->
+    <button type="submit" class="button bg-blue-500 hover:bg-blue-600">Share Selected Wishlists</button>
+  </form>
+
+  <!-- Link to go back to the profile page -->
+  <div class="text-center mt-6">
+    <a href="/profile" class="text-blue-400 hover:underline">Back to Your Profile page</a>
+  </div>
+</div>
+
+</body>
+</html>

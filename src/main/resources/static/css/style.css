@@ -1,0 +1,163 @@
+/* Dark Mode Container and Background */
+body {
+    background-color: #1a202c; /* Dark gray background */
+    color: #e2e8f0;            /* Light text color */
+}
+
+.container {
+    background-color: #2d3748; /* Darker container */
+    color: #e2e8f0;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Input Fields, Dropdowns, and Date Picker */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background-color: #2d3748; /* Dark input background */
+    color: #e2e8f0;            /* Light text color */
+    border: 1px solid #4a5568; /* Dark border */
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+input:focus,
+select:focus {
+    border-color: #63b3ed; /* Light blue border on focus */
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.5); /* Light blue glow effect */
+    outline: none;
+}
+
+/* Button Styling */
+button {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    color: #1a202c;            /* Dark button text */
+    background-color: #63b3ed; /* Light blue button */
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+    background-color: #4299e1; /* Slightly darker blue */
+}
+
+/* Additional Button Styling Variants */
+.button-add-all {
+    background-color: #38a169; /* Green button */
+}
+
+.button-add-all:hover {
+    background-color: #2f855a; /* Darker green on hover */
+}
+
+.button-delete {
+    background-color: #e53e3e; /* Red button */
+}
+
+.button-delete:hover {
+    background-color: #c53030; /* Darker red on hover */
+}
+
+/* Headings */
+h1, h2 {
+    color: #63b3ed; /* Light blue for headings */
+    text-align: center;
+}
+
+/* Text Styling */
+.text-red-500 {
+    color: #fc8181; /* Light red for error messages */
+}
+
+.text-green-500 {
+    color: #68d391; /* Light green for success messages */
+}
+
+.error-message {
+    color: #e3342f; /* Red color */
+    font-size: 0.9em;
+    margin-top: 0.25rem;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    color: #e2e8f0;
+}
+
+th, td {
+    padding: 0.75rem;
+    border: 1px solid #4a5568; /* Dark border */
+    text-align: left;
+}
+
+th {
+    background-color: #2d3748;
+    color: #63b3ed;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #2a3342; /* Alternate row color */
+}
+
+tr:nth-child(odd) {
+    background-color: #1a202c;
+}
+
+tr:hover {
+    background-color: #4a5568; /* Row hover effect */
+}
+
+/* Link Styling */
+a, a:visited {
+    color: #63b3ed; /* Light blue link color */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4299e1; /* Darker blue on hover */
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+/* Tooltip Styling for Disabled Buttons */
+button[title] {
+    position: relative;
+}
+
+button[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+}

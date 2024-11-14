@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="bg-gray-100">
+
+<!-- Logout Link -->
+<div class="text-right p-4">
+    <a href="/logout" class="text-blue-400 hover:underline">Logout</a>
+</div>
+
+<!-- Success and Error Messages -->
+<div th:if="${success}" class="alert alert-success text-green-500 text-center">
+    <p th:text="${success}"></p>
+</div>
+<div th:if="${error}" class="alert alert-danger text-red-500 text-center">
+    <p th:text="${error}"></p>
+</div>
+
+<h2 class="text-center text-lg text-blue-500">Welcome, <span th:text="${appUser.username}"></span>!</h2>
+<p class="text-center">Your email: <span th:text="${appUser.email}"></span></p>
+
+<!-- List of User's Existing Wishlists -->
+<h2 class="text-center text-blue-500">Your Wishlists</h2>
+<div th:if="${wishLists != null}">
+    <table class="table-auto w-full">
+        <thead>
+        <tr>
+            <th>Event Name</th>
+            <th>Event Date</th>
+            <th>Actions</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="wishList : ${wishLists}">
+            <!-- Link event name to the wishlist details page -->
+            <td><a th:href="@{/wishlists/{id}/wishes(id=${wishList.id})}" th:text="${wishList.eventName}" class="link">Event Name</a></td>
+            <td th:text="${wishList.eventDate}">Event Date</td>
+            <td>
+                <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}" class="link">Add Wishes</a> |
+                <a th:href="@{/wishlists/{id}/share(id=${wishList.id})}" class="link">Share Wishlist</a>
+            </td>
+            <td>
+                <form th:if="${wishList.wishes.empty}" th:action="@{/wishlists/{id}/delete(id=${wishList.id})}" method="post">
+                    <button class="button button-delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${wishLists != null}">
+    <p class="text-center">You have no wishlists. Create your first wishlist above.</p>
+</div>
+
+<!-- Button to Create a New Wishlist -->
+<div class="text-center mb-4">
+    <a href="/wishlists/new" class="button">Create New Wishlist</a>
+</div>
+
+<!-- Buttons for Item Management -->
+<div class="text-center mt-4">
+    <a href="/wishes/add" class="button">Add New Items</a> |
+    <a href="/wishes/edit" class="button">Edit Existing Items</a>
+</div>
+
+<!-- Sharing Section -->
+<h2 class="text-center text-blue-500 mt-8">Share a Wishlist</h2>
+<form th:action="@{/wishlists/shareSelected}" method="post" class="max-w-md mx-auto">
+    <div th:if="${wishLists != null}">
+        <label class="block mb-2 text-sm font-bold">Select a Wishlist to Share:</label>
+        <ul class="mb-4">
+            <li th:each="wishList : ${wishLists}">
+                <label class="block">
+                    <input type="radio" name="wishListIds" th:value="${wishList.id}" required />
+                    <span th:text="${wishList.eventName}"></span>
+                </label>
+            </li>
+        </ul>
+    </div>
+    <div th:unless="${wishLists != null}">
+        <p class="text-center">No wishlists available to share. Please create one first.</p>
+    </div>
+
+    <!-- Display Recipients as Checkboxes -->
+    <h2 class="text-center text-blue-500">Select Recipients</h2>
+    <div th:if="${users != null}">
+        <ul class="mb-4">
+            <li th:each="user : ${users}">
+                <label class="block">
+                    <input type="checkbox" name="recipientUsernames" th:value="${user.username}" />
+                    <span th:text="${user.username}"></span>
+                </label>
+            </li>
+        </ul>
+    </div>
+    <div th:unless="${users != null}">
+        <p class="text-center">No recipients available.</p>
+    </div>
+
+    <!-- Submit to Share the Wishlist -->
+    <button type="submit" class="button">Share Wishlist</button>
+</form>
+
+<!-- Shared Wishlists Section -->
+<h2>Wishlists Shared with You</h2>
+<div th:if="${sharedWishLists != null && !sharedWishLists.isEmpty()}">
+    <table class="table-auto w-full">
+        <tr>
+            <th>Event Name</th>
+            <th>Event Date</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="sharedWishList : ${sharedWishLists}">
+            <td th:text="${sharedWishList.eventName}">Event Name</td>
+            <td th:text="${sharedWishList.eventDate}">Event Date</td>
+            <td>
+                <a th:href="@{/wishlists/{id}/wishes(id=${sharedWishList.id})}">
+                    <button class="button">View Items</button>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:unless="${sharedWishLists != null && !sharedWishLists.isEmpty()}">
+    <p class="text-center">No wishlists have been shared with you yet.</p>
+</div>
+
+</body>
+</html>

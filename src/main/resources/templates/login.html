@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Page title with localization -->
+    <title th:text="#{login.title}">Login</title>
+
+    <!-- CSS stylesheet link -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="bg-gray-100">
+<!-- Main container for the login form -->
+<div class="container shadow bg-gray-800 rounded mt-4 p-6">
+
+    <!-- Header for the login form -->
+    <h2 th:text="#{login.header}" class="text-center text-xl text-blue-400 mb-4">Login</h2>
+
+    <!-- Login form -->
+    <form th:action="@{/login}" method="post">
+        <!-- Email input field with localized label -->
+        <div class="mb-3">
+            <label th:text="#{login.email.label}" class="block text-blue-300 mb-1">Email:</label>
+            <input type="email" name="username" class="input-field" placeholder="Enter your email" required />
+        </div>
+
+        <!-- Password input field with localized label -->
+        <div class="mb-3">
+            <label th:text="#{login.password.label}" class="block text-blue-300 mb-1">Password:</label>
+            <input type="password" name="password" class="input-field" placeholder="Enter your password" required />
+        </div>
+
+        <!-- Submit button with localized text -->
+        <button type="submit" th:text="#{login.submit}" class="button bg-blue-500 hover:bg-blue-600">Login</button>
+    </form>
+
+    <!-- Error message for invalid login with localization -->
+    <div th:if="${param.error}" th:text="#{login.error}" class="text-red-500 text-center mt-4">Invalid email or password</div>
+
+    <!-- Message for successful logout with localization -->
+    <div th:if="${param.logout}" th:text="#{login.logout.success}" class="text-green-500 text-center mt-4">You have been logged out successfully</div>
+
+    <!-- Link to sign up page for new users -->
+    <div class="text-center mt-6">
+        <p class="text-gray-300">If you don't have an account, <a href="/register" class="text-blue-400 hover:underline">sign up here</a>.</p>
+    </div>
+</div>
+</body>
+</html>
