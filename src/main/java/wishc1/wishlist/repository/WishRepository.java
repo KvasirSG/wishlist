@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    Optional<Wish> findByName(String name); // For finding wish by name
+
+    // Find a wish by name
+    Optional<Wish> findByName(String name);
 }

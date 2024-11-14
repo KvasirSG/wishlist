@@ -1,9 +1,8 @@
 package wishc1.wishlist.model;
 
-import jakarta.persistence.GenerationType;
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "wishes")
@@ -22,7 +21,9 @@ public class Wish {
     @Column(name = "added_date")
     private LocalDateTime addedDate;
 
-    // Constructors, Getters, and Setters
+    @ManyToMany(mappedBy = "wishes")
+    private List<WishList> wishLists;
+
     public Wish() {}
 
     public Wish(String name, String description, LocalDateTime addedDate) {
@@ -32,6 +33,7 @@ public class Wish {
     }
 
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -62,5 +64,13 @@ public class Wish {
 
     public void setAddedDate(LocalDateTime addedDate) {
         this.addedDate = addedDate;
+    }
+
+    public List<WishList> getWishLists() {
+        return wishLists;
+    }
+
+    public void setWishLists(List<WishList> wishLists) {
+        this.wishLists = wishLists;
     }
 }

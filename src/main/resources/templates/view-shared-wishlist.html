@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shared Wishlist Items</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="bg-gray-100">
+
+<!-- Logout Link -->
+<div class="text-right p-4">
+    <a href="/logout" class="text-blue-400 hover:underline">Logout</a>
+</div>
+
+<!-- Display Success or Error Messages -->
+<div th:if="${success}" class="alert alert-success">
+    <p th:text="${success}"></p>
+</div>
+<div th:if="${error}" class="alert alert-danger text-red-500">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- Shared Wishlist Information -->
+<h2 class="text-center text-lg text-blue-500" th:text="${wishList.eventName}">Wishlist Name</h2>
+<p class="text-center">Event Date: <span th:text="${wishList.eventDate}"></span></p>
+
+<!-- List of Items in the Shared Wishlist -->
+<h3 class="text-center text-blue-500 mt-4">Items in this Wishlist</h3>
+<div th:if="${wishes != null && !wishes.isEmpty()}">
+    <table class="table-auto w-full mt-4">
+        <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Description</th>
+            <th>Date Added</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="wish : ${wishes}">
+            <td th:text="${wish.name}">Item Name</td>
+            <td th:text="${wish.description}">Description</td>
+            <td th:text="${wish.addedDate}">Date Added</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${wishes != null && !wishes.isEmpty()}">
+    <p class="text-center">This wishlist has no items yet.</p>
+</div>
+
+<!-- Back to Profile Button -->
+<div class="text-center mt-6">
+    <a href="/profile" class="button">Back to Profile</a>
+</div>
+
+</body>
+</html>
