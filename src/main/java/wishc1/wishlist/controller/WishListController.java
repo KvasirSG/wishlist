@@ -326,6 +326,23 @@ public class WishListController {
         return "redirect:/wishlists/" + wishlistId + "/wishes";
     }
 
+    @PostMapping("/{id}/delete")
+    public String deleteWishlist(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<WishList> wishList = wishListService.getWishListById(id);
+
+        if (wishList.isPresent()) {
+            if (wishList.get().getWishes().isEmpty()) {
+                wishListService.deleteWishListById(id);
+                redirectAttributes.addFlashAttribute("success", "Wishlist deleted successfully.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Wishlist has items. Remove items before deleting.");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Wishlist not found.");
+        }
+
+        return "redirect:/wishlists/profile";
+    }
 
 
 

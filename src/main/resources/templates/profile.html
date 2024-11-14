@@ -11,11 +11,11 @@
     <a href="/logout" class="text-blue-400 hover:underline">Logout</a>
 </div>
 
-<!-- Display Success or Error Messages -->
-<div th:if="${success}" class="alert alert-success">
+<!-- Success and Error Messages -->
+<div th:if="${success}" class="alert alert-success text-green-500 text-center">
     <p th:text="${success}"></p>
 </div>
-<div th:if="${error}" class="alert alert-danger text-red-500">
+<div th:if="${error}" class="alert alert-danger text-red-500 text-center">
     <p th:text="${error}"></p>
 </div>
 
@@ -31,6 +31,7 @@
             <th>Event Name</th>
             <th>Event Date</th>
             <th>Actions</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -41,6 +42,11 @@
             <td>
                 <a th:href="@{/wishlists/{id}/addWish(id=${wishList.id})}" class="link">Add Wishes</a> |
                 <a th:href="@{/wishlists/{id}/share(id=${wishList.id})}" class="link">Share Wishlist</a>
+            </td>
+            <td>
+                <form th:if="${wishList.wishes.empty}" th:action="@{/wishlists/{id}/delete(id=${wishList.id})}" method="post">
+                    <button class="button button-delete">Delete</button>
+                </form>
             </td>
         </tr>
         </tbody>
@@ -102,7 +108,7 @@
 <!-- Shared Wishlists Section -->
 <h2>Wishlists Shared with You</h2>
 <div th:if="${sharedWishLists != null && !sharedWishLists.isEmpty()}">
-    <table>
+    <table class="table-auto w-full">
         <tr>
             <th>Event Name</th>
             <th>Event Date</th>
@@ -112,19 +118,16 @@
             <td th:text="${sharedWishList.eventName}">Event Name</td>
             <td th:text="${sharedWishList.eventDate}">Event Date</td>
             <td>
-                <!-- Button to view shared wishlist items -->
                 <a th:href="@{/wishlists/{id}/wishes(id=${sharedWishList.id})}">
-                    <button>View Items</button>
+                    <button class="button">View Items</button>
                 </a>
             </td>
         </tr>
     </table>
 </div>
 <div th:unless="${sharedWishLists != null && !sharedWishLists.isEmpty()}">
-    <p>No wishlists have been shared with you yet.</p>
+    <p class="text-center">No wishlists have been shared with you yet.</p>
 </div>
-
-
 
 </body>
 </html>
